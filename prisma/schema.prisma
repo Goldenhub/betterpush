@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  binaryTargets = ["native", "windows"]
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -16,11 +15,17 @@ datasource db {
 }
 
 model User {
-  id                String @id @default(uuid()) @db.Uuid
-  email            String @unique
-  name              String
-  username        String @unique
-  password        String
+  id                                String @id @default(uuid()) @db.Uuid
+  email                             String @unique
+  username                          String @unique
+  password                          String
+  email_verified                    Boolean @default(false)
+  verification_token                String?
+  verification_token_expires_at     DateTime?
+  reset_password_token              String?
+  reset_password_token_expires_at   DateTime?
+
+
   providers       ProviderIntegration[]
 
   refresh_tokens  RefreshToken[]
@@ -51,10 +56,16 @@ model RefreshToken  {
   user_id         String  @db.Uuid
   expires_at      DateTime
 
+  device_id       String
+  user_agent      String
+  ip              String
+
   user            User  @relation(fields: [user_id], references: [id])
 
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt @map("updated_at")
 
+  
+  @@unique([user_id, device_id])
   @@map("refresh_tokens")
 }

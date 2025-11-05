@@ -1,20 +1,23 @@
 import type { NextFunction, Request, Response } from "express";
-import type { ForgotPasswordPayload, tokenPayload } from "../interfaces";
-import { verifyAccessToken, verifyRefreshToken, verifyResetPasswordToken } from "../services/jwt.service";
+import prisma from "../prisma/client";
+import type { tokenPayload } from "../token/token.interface";
+import { tokenService } from "../token/token.service";
 import { CustomError } from "../utils/customError";
 import { handleTryCatch } from "../utils/handleTryCatch";
 
+const { verifyAccessToken, verifyRefreshToken } = tokenService;
+
 export const authenticate = handleTryCatch(async (req: Request, _res: Response, next: NextFunction) => {
-  let data: tokenPayload;
+  let data: tokenPayload | null = null;
   if (req.path === "/refresh") {
-    const { refreshToken } = req.cookies as { refreshToken: string };
+    const { "refresh-token": refreshToken } = req.cookies as { "refresh-token": string };
 
     if (!refreshToken) {
       throw new CustomError("Unauthorized to refresh token", 401);
     }
-    data = await verifyRefreshToken<tokenPayload>(refreshToken);
+    data = await verifyRefreshToken(refreshToken);
   } else {
-    const token = req.headers.authorization?.split(" ")[1] as string;
+    const { "access-token": token } = req.cookies as { "access-token": string };
 
     if (!token) {
       throw new CustomError("Unauthorized", 401);
@@ -22,30 +25,15 @@ export const authenticate = handleTryCatch(async (req: Request, _res: Response, 
     data = await verifyAccessToken<tokenPayload>(token);
   }
 
-  if (req.body === undefined) {
-    req.body = {};
-  }
-  req.body.id = data.sub;
-  req.body.email = data.email;
-  req.body.name = data.name;
-  req.body.role = data.role;
-  req.body.emailVerified = data.emailVerified;
-
-  next();
-});
-
-export const authenticateResetPassword = handleTryCatch(async (req: Request, _res: Response, next: NextFunction) => {
-  const { token } = req.body;
-
-  if (!token) {
+  if (!data) {
     throw new CustomError("Unauthorized", 401);
   }
 
-  const data = await verifyResetPasswordToken<ForgotPasswordPayload>(token);
+  const user = await prisma.user.findUnique({
+    where: { id: data.sub },
+  });
 
-  if (!data.email) {
-    throw new CustomError("Unauthorized", 401);
-  }
+  req.user = user ?? undefined;
 
   next();
 });

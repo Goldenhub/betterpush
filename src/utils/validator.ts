@@ -14,10 +14,10 @@ export const validator = async (req: Request, res: Response, next: NextFunction,
   if (!reqObj) {
     return responseHandler.error(res, new CustomError("Payload required", 400));
   }
-  if (req.path === "/refresh" && req.method === "POST") {
-    const { refreshToken } = req.cookies;
-    Object.assign(reqObj, { refreshToken });
-  }
+  // if (req.path === "/refresh" && req.method === "POST") {
+  //   const { refreshToken } = req.cookies;
+  //   Object.assign(reqObj, { refreshToken });
+  // }
   const errors: ValidationError[] = [];
   if (Array.isArray(dto)) {
     for (const o of dto) {

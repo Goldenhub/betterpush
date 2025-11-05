@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 import express from "express";
 import { errorHandler, unknownEndpoints } from "./src/middlewares";
 import router from "./src/routes";
+import "reflect-metadata";
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.redirect("/api/v1");
 });
 app.get("/api/v1", (_req: Request, res: Response) => {
-  res.json({ msg: `welcome to Autoloads API` });
+  res.json({ msg: `welcome to BetterPush API` });
 });
 
 app.use("/api/v1", router);

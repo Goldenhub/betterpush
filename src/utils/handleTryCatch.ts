@@ -1,12 +1,20 @@
-import type { NextFunction, Request, Response } from "express";
-import type { CustomError } from "./customError";
+import { response, type NextFunction, type Request, type Response } from "express";
+import { CustomError } from "./customError";
 import { responseHandler } from "./responseHandler";
+import { Prisma } from "../generated/prisma";
 
 export const handleTryCatch = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       await fn(req, res, next);
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2002") {
+          // Prisma's unique constraint violation
+          const field = err.meta?.target;
+          return responseHandler.error(res, new CustomError(`${field} already exists`, 500));
+        }
+      }
       console.error({
         message: (err as Error).message,
         endpoint: req.path,
