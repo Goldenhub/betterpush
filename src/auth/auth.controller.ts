@@ -130,8 +130,9 @@ export const logout = handleTryCatch(async (req: Request, res: Response) => {
   const user: User | undefined = req.user;
   const { "refresh-token": refreshToken } = req.cookies;
   const { device_id: deviceId }: LogoutDto = req.body;
+  const userAgent = req.headers["user-agent"] ?? "unknown";
 
-  const response = await authService.logout({ user, refreshToken, deviceId });
+  const response = await authService.logout({ user, refreshToken, deviceId, userAgent });
 
   if (!response) {
     return responseHandler.error(res, new CustomError("Error encountered", 401));

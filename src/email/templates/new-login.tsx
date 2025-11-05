@@ -1,4 +1,4 @@
-import { Body, Button, Column, Container, Head, Heading, Html, Img, Preview, Row, Section, Text } from "@react-email/components";
+import { Body, Column, Container, Head, Heading, Html, Img, Preview, Row, Section, Text } from "@react-email/components";
 
 export interface LoginEmailProps {
   username?: string;
@@ -92,36 +92,12 @@ const logo = {
   padding: "30px 20px",
 };
 
-const buttonContainer = {
-  textAlign: "center" as const,
-};
-
-const button = {
-  backgroundColor: "#e00707",
-  borderRadius: 3,
-  color: "#FFF",
-  fontWeight: "bold",
-  border: "1px solid rgb(0,0,0, 0.1)",
-  cursor: "pointer",
-  display: "inline-block",
-  padding: "12px 30px",
-  textDecoration: "none",
-};
-
 const content = {
   border: "1px solid rgb(0,0,0, 0.1)",
   borderRadius: "3px",
   overflow: "hidden",
 };
 
-const image = {
-  maxWidth: "100%",
-};
-
 const boxInfos = {
   padding: "20px",
-};
-
-const containerImageFooter = {
-  padding: "45px 0 0 0",
 };

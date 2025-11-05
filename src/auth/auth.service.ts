@@ -194,11 +194,11 @@ export const authService = {
     };
   },
 
-  async logout({ user, refreshToken, deviceId }: { user: User | undefined; refreshToken: string; deviceId: string }) {
+  async logout({ user, refreshToken, deviceId, userAgent }: { user: User | undefined; refreshToken: string; deviceId: string; userAgent: string }) {
     if (!user) {
       throw new CustomError("User not found", 404);
     }
 
-    return tokenService.deleteRefreshToken(refreshToken, user.id, deviceId);
+    return tokenService.deleteRefreshToken(refreshToken, user.id, deviceId, userAgent);
   },
 };

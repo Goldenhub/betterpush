@@ -6,7 +6,6 @@ import type { tokenPayload } from "./token.interface";
 import config from "../config";
 import prisma from "../prisma/client";
 import { CustomError } from "../utils/customError";
-import { compareValue, hashValue } from "../utils/helpers";
 
 const { ACCESS_TOKEN_EXPIRATION, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_EXPIRATION } = config;
 const access_expiresIn: StringValue = ACCESS_TOKEN_EXPIRATION as StringValue;
@@ -119,7 +118,7 @@ export const tokenService = {
     return newToken;
   },
 
-  async deleteRefreshToken(token: string, userId: string, deviceId: string) {
+  async deleteRefreshToken(token: string, userId: string, deviceId: string, userAgent: string) {
     const record = await this.verifyRefreshToken(token);
     if (!record) {
       throw new CustomError("Invalid refresh token", 401);
@@ -128,8 +127,11 @@ export const tokenService = {
     await prisma.refreshToken.delete({
       where: {
         id: record.id,
-        user_id: userId,
-        device_id: deviceId,
+        user_id_device_id: {
+          user_id: userId,
+          device_id: deviceId,
+        },
+        user_agent: userAgent,
       },
     });
 

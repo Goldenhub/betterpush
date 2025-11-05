@@ -1,6 +1,5 @@
-import { IsEmail, IsNotEmpty, IsObject, IsString, IsUUID } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { IsValidPassword } from "../decorators/is-valid-password";
-import type { User } from "../generated/prisma";
 
 export class SignupDto {
   @IsEmail()
