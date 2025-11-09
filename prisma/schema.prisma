@@ -17,16 +17,20 @@ datasource db {
 model User {
   id                                String @id @default(uuid()) @db.Uuid
   email                             String @unique
+  name                              String
   username                          String @unique
-  password                          String
+  password                          String?
   email_verified                    Boolean @default(false)
   verification_token                String?
   verification_token_expires_at     DateTime?
   reset_password_token              String?
   reset_password_token_expires_at   DateTime?
+  avatar_url                        String?
+  
 
+  git_credentials                        GitCredential[]
+  deployment_provider_integrations       DeploymentProviderIntegration[]
 
-  providers       ProviderIntegration[]
 
   refresh_tokens  RefreshToken[]
 
@@ -36,7 +40,7 @@ model User {
   @@map("users")
 }
 
-model ProviderIntegration {
+model DeploymentProviderIntegration {
   id                  String @id @default(uuid()) @db.Uuid
   provider            String
   accessToken         String
@@ -47,7 +51,24 @@ model ProviderIntegration {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt @map("updated_at")
 
-  @@map("provider_integrations")
+  @@map("deployment_provider_integrations")
+}
+
+model GitCredential {
+  id                  String @id @default(uuid()) @db.Uuid
+  provider            String
+  provider_url        String
+  accessToken         String?
+  refreshToken        String?
+  provider_user_id    String
+  scope               String?
+  user_id             String  @db.Uuid
+  user                User    @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("git_credentials")
 }
 
 model RefreshToken  {

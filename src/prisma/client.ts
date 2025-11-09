@@ -32,6 +32,7 @@ const prisma = base.$extends({
               device_id: args.create.device_id as string,
             },
             user_agent: args.create.user_agent as string,
+            ip: args.create.ip as string,
           },
           select: { id: true },
         });

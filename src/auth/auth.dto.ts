@@ -11,6 +11,10 @@ export class SignupDto {
   @IsNotEmpty()
   @IsString()
   username!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name!: string;
 }
 
 export class VerifyEmailDto {
@@ -59,6 +63,16 @@ export class RefreshTokenDto {
 }
 
 export class LogoutDto {
+  @IsNotEmpty()
+  @IsString()
+  device_id!: string;
+}
+
+export class GithubAuthCallbackDto {
+  @IsNotEmpty()
+  @IsString()
+  code!: string;
+
   @IsNotEmpty()
   @IsString()
   device_id!: string;

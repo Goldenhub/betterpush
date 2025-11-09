@@ -16,10 +16,11 @@
     "db:pull": "dotenv -e .env.local -- npx prisma db pull",
     "db:seed": "dotenv -e .env.local -- npx prisma db seed",
     "db:seed:prod": "dotenv -e .env -- npx prisma db seed",
-    "lint": "npx @biomejs/biome lint './src/{config,controllers,decorators,dtos,enums,interfaces,middlewares,prisma,queues,routes,services,utils}' './public'",
+    "lint": "npx @biomejs/biome lint './src/**/*.{controller,decorator,dtos,services,}.{ts,js}' './public', './src/**/**/*.{ts,js}'",
     "format": "prettier --write 'src/**/*.{ts,js,json}' 'public/**/*.{ts,js,json}' '*.{ts,js}'",
     "docker:start": "docker compose up -d",
     "docker:stop": "docker compose down",
+    "tunnel": "ngrok http 4321",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

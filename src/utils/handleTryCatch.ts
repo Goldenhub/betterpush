@@ -1,7 +1,7 @@
-import { response, type NextFunction, type Request, type Response } from "express";
+import type { NextFunction, Request, Response } from "express";
+import { Prisma } from "../generated/prisma";
 import { CustomError } from "./customError";
 import { responseHandler } from "./responseHandler";
-import { Prisma } from "../generated/prisma";
 
 export const handleTryCatch = (fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) => {
   return async (req: Request, res: Response, next: NextFunction) => {

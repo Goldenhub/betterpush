@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "../auth/auth.dto";
 import { validator } from "../utils/validator";
+import { GetUserDto, UpdateUserDto } from "../user/user.dto";
 
 export const validate = {
   // Auth
@@ -24,5 +25,13 @@ export const validate = {
   },
   logout: async (req: Request, res: Response, next: NextFunction) => {
     return validator(req, res, next, LogoutDto);
+  },
+
+  // user
+  getUser: async (req: Request, res: Response, next: NextFunction) => {
+    return validator(req, res, next, GetUserDto);
+  },
+  updateUser: async (req: Request, res: Response, next: NextFunction) => {
+    return validator(req, res, next, UpdateUserDto);
   },
 };

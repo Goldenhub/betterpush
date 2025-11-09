@@ -8,10 +8,14 @@ import { responseHandler } from "../utils/responseHandler";
 import type { ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
 import { authService } from "./auth.service";
 
-export const signup = handleTryCatch(async (req: Request, res: Response) => {
-  const { email, password, username }: SignupDto = req.body;
+const { REFRESH_TOKEN_EXPIRATION } = config;
+const refresh_token_expiresIn = Number(REFRESH_TOKEN_EXPIRATION) * SECONDS_IN_A_DAY * 1000;
+const access_token_expiresIn = 15 * 60 * 1000; // 15 minutes
 
-  const response = await authService.signup({ email, password, username });
+export const signup = handleTryCatch(async (req: Request, res: Response) => {
+  const { email, password, username, name }: SignupDto = req.body;
+
+  const response = await authService.signup({ email, password, username, name });
 
   if (!response) {
     return responseHandler.error(res, new CustomError("Something went wrong", 500));
@@ -33,10 +37,6 @@ export const verifyEmailOnSignup = handleTryCatch(async (req: Request, res: Resp
 });
 
 export const login = handleTryCatch(async (req: Request, res: Response) => {
-  const { REFRESH_TOKEN_EXPIRATION } = config;
-  const refresh_token_expiresIn = Number(REFRESH_TOKEN_EXPIRATION) * SECONDS_IN_A_DAY * 1000;
-  const access_token_expiresIn = 15 * 60 * 1000; // 15 minutes
-
   const { email, password, device_id }: LoginDto = req.body;
   const user_agent = req.headers["user-agent"] ?? "unknown";
   const ip = req.ip ?? "0.0.0.0";
@@ -154,3 +154,56 @@ export const logout = handleTryCatch(async (req: Request, res: Response) => {
 
   return responseHandler.success(res, 200, "Logged out successfully");
 });
+
+export const githubAuth = handleTryCatch(async (_req: Request, res: Response) => {
+  const response = await authService.githubAuth();
+
+  return res.redirect(response);
+});
+
+export const githubRepo = handleTryCatch(async (_req: Request, res: Response) => {
+  const response = await authService.githubRepo();
+
+  return res.redirect(response);
+});
+
+export const githubOAuthLoginCallback = handleTryCatch(async (req: Request, res: Response) => {
+  const user_agent = req.headers["user-agent"] ?? "unknown";
+  const ip = req.ip ?? "0.0.0.0";
+  const { code } = req.query as { code: string };
+  const { responseUrl, accessToken, refreshToken } = await authService.githubOAuthLoginCallback({ code, user_agent, ip });
+
+  // send the refresh token via http-only cookie
+  res.cookie("refresh-token", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+    maxAge: refresh_token_expiresIn,
+  });
+
+  // send the access token via http-only cookie
+  res.cookie("access-token", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+    maxAge: access_token_expiresIn,
+  });
+
+  return res.redirect(responseUrl);
+});
+
+export const githubOAuthRepoCallback = handleTryCatch(async (req: Request, res: Response) => {
+  const { code } = req.query as { code: string };
+  const { user }: { user: User } = req.user;
+
+  const responseUrl = await authService.githubOAuthRepoCallback({ code, user });
+
+  return res.redirect(responseUrl);
+});
+
+// export const githubInstallCallback = handleTryCatch(async (req: Request, res: Response) => {
+//   const { installation_id, setup_action } = req.query as { installation_id: string; setup_action: string };
+//   const response = await authService.githubInstallCallback({ installation_id, setup_action });
+// });
