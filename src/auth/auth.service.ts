@@ -379,11 +379,12 @@ export const authService = {
 
     // const device_id = String(id);
 
-    const repos = await axios.get("https://api.github.com/user/repos", {
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
+    //Get repositories
+    // const repos = await axios.get("https://api.github.com/user/repos", {
+    //   headers: { Authorization: `Bearer ${access_token}` },
+    // });
 
-    // console.log(repos.data);
+    // // console.log(repos.data);
 
     const provider = await prisma.gitCredential.findFirst({
       where: {
