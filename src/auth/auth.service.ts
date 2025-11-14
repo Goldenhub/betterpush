@@ -8,7 +8,7 @@ import type { User } from "../generated/prisma";
 import prisma from "../prisma/client";
 import { tokenService } from "../token/token.service";
 import { CustomError } from "../utils/customError";
-import { decrypt, encrypt } from "../utils/helpers";
+import { encrypt } from "../utils/helpers";
 import { comparePassword } from "../utils/passwordHashing";
 import type { ForgotPasswordDto, LoginDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
 
