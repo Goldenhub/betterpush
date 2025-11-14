@@ -383,10 +383,6 @@ export const authService = {
     const response = tokenRes.data;
 
     const { access_token, scope } = response;
-    console.log("at: ", access_token);
-    const e = encrypt(access_token);
-    console.log("enc: ", e);
-    console.log("dec: ", decrypt(e));
 
     const encryptedAccessToken = encrypt(access_token);
     // Get github user profile
