@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "../auth/auth.dto";
+import { CreatePasswordDto, ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "../auth/auth.dto";
 import { validator } from "../utils/validator";
 import { GetUserDto, UpdateUserDto } from "../user/user.dto";
 
@@ -22,6 +22,9 @@ export const validate = {
   },
   refreshToken: async (req: Request, res: Response, next: NextFunction) => {
     return validator(req, res, next, RefreshTokenDto);
+  },
+  createPassword: async (req: Request, res: Response, next: NextFunction) => {
+    return validator(req, res, next, CreatePasswordDto);
   },
   logout: async (req: Request, res: Response, next: NextFunction) => {
     return validator(req, res, next, LogoutDto);

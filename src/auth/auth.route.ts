@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticate, validate } from "../middlewares";
-import { forgotPassword, githubAuth, githubOAuthLoginCallback, githubOAuthRepoCallback, githubRepo, login, logout, refreshToken, resetPassword, signup, verifyEmailOnSignup } from "./auth.controller";
+import { createPassword, forgotPassword, githubAuth, githubOAuthLoginCallback, githubOAuthRepoCallback, githubRepo, login, logout, refreshToken, resetPassword, signup, verifyEmailOnSignup } from "./auth.controller";
 
 const authRouter = express.Router();
 
@@ -10,6 +10,7 @@ authRouter.post("/login", validate.login, login);
 authRouter.post("/forgot-password", validate.forgotPassword, forgotPassword);
 authRouter.post("/reset-password", validate.resetPassword, resetPassword);
 authRouter.post("/refresh", authenticate, validate.refreshToken, refreshToken);
+authRouter.patch("/create-password", authenticate, validate.createPassword, createPassword);
 authRouter.post("/logout", authenticate, validate.logout, logout);
 
 authRouter.get("/github/login", githubAuth);

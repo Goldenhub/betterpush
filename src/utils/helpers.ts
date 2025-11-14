@@ -1,9 +1,6 @@
-// import crypto from "node:crypto";
+import crypto from "node:crypto";
 import { compareSync, genSaltSync, hashSync } from "bcryptjs";
-// const generatePassword = (): string => {
-//   return Math.random().toString(36).slice(-10);
-// };
-
+import config from "../config";
 import { passwordRegex } from "../constants";
 
 export function hashValue(value: string) {
@@ -99,3 +96,28 @@ export const paginate = <T>(data: T[], count: number, page?: string, limit?: str
 
   return { data, pagination };
 };
+
+const algorithm = "aes-256-gcm";
+const { ENCRYPTION_KEY } = config as { ENCRYPTION_KEY: string };
+const iv = crypto.randomBytes(16);
+const secret_key = Buffer.from(ENCRYPTION_KEY, "hex");
+
+export function encrypt(text: string) {
+  const cipher = crypto.createCipheriv(algorithm, secret_key, iv);
+  const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `${iv.toString("hex")}:${tag.toString("hex")}:${encrypted.toString("hex")}`;
+}
+
+export function decrypt(data: string) {
+  const [ivHex, tagHex, encryptedHex] = data.split(":");
+  const iv = Buffer.from(ivHex as string, "hex");
+  const tag = Buffer.from(tagHex as string, "hex");
+  const encrypted = Buffer.from(encryptedHex as string, "hex");
+
+  const decipher = crypto.createDecipheriv(algorithm, secret_key, iv);
+  decipher.setAuthTag(tag);
+
+  const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
+  return decrypted.toString();
+}

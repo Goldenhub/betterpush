@@ -5,7 +5,7 @@ import type { User } from "../generated/prisma";
 import { CustomError } from "../utils/customError";
 import { handleTryCatch } from "../utils/handleTryCatch";
 import { responseHandler } from "../utils/responseHandler";
-import type { ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
+import type { CreatePasswordDto, ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
 import { authService } from "./auth.service";
 
 const { REFRESH_TOKEN_EXPIRATION } = config;
@@ -124,6 +124,20 @@ export const refreshToken = handleTryCatch(async (req: Request, res: Response) =
   });
 
   return responseHandler.success(res, 200, "Tokens have been refreshed");
+});
+
+// Create password if authNed with Github
+export const createPassword = handleTryCatch(async (req: Request, res: Response) => {
+  const { password }: CreatePasswordDto = req.body;
+  const { id } = req.user;
+
+  const response = await authService.createPassword({ password, id });
+
+  if (!response) {
+    return responseHandler.error(res, new CustomError("Something went wrong", 500));
+  }
+
+  return responseHandler.success(res, 200, "Password created successfully");
 });
 
 export const logout = handleTryCatch(async (req: Request, res: Response) => {

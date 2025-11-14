@@ -77,3 +77,8 @@ export class GithubAuthCallbackDto {
   @IsString()
   device_id!: string;
 }
+
+export class CreatePasswordDto {
+  @IsValidPassword()
+  password!: string;
+}

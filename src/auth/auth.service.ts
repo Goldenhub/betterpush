@@ -8,6 +8,7 @@ import type { User } from "../generated/prisma";
 import prisma from "../prisma/client";
 import { tokenService } from "../token/token.service";
 import { CustomError } from "../utils/customError";
+import { decrypt, encrypt } from "../utils/helpers";
 import { comparePassword } from "../utils/passwordHashing";
 import type { ForgotPasswordDto, LoginDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
 
@@ -227,6 +228,24 @@ export const authService = {
     };
   },
 
+  async createPassword({ password, id }: { password: string; id: string }) {
+    const user = await prisma.user.update({
+      where: {
+        id,
+        password: null,
+      },
+      data: {
+        password,
+      },
+    });
+
+    if (!user) {
+      throw new CustomError("User not found", 404);
+    }
+
+    return user;
+  },
+
   async logout({ user, refreshToken, deviceId, userAgent }: { user: User | undefined; refreshToken: string; deviceId: string; userAgent: string }) {
     if (!user) {
       throw new CustomError("User not found", 404);
@@ -259,10 +278,9 @@ export const authService = {
     );
 
     const response = tokenRes.data;
-    console.log(response);
 
     const { access_token, scope } = response;
-    const hashedAccessToken = crypto.createHash("sha256").update(access_token).digest("hex");
+    const encryptedAccessToken = encrypt(access_token);
     // Get github user profile
     const profile = await axios.get("https://api.github.com/user", {
       headers: {
@@ -310,7 +328,6 @@ export const authService = {
         },
       },
     });
-    console.log(user);
 
     if (!user) {
       console.log("ee");
@@ -328,7 +345,7 @@ export const authService = {
               provider: "github",
               scope: scope,
               provider_url: `https://github.com/${login}`,
-              accessToken: hashedAccessToken,
+              accessToken: encryptedAccessToken,
             },
           },
         },
@@ -366,7 +383,12 @@ export const authService = {
     const response = tokenRes.data;
 
     const { access_token, scope } = response;
-    const hashedAccessToken = crypto.createHash("sha256").update(access_token).digest("hex");
+    console.log("at: ", access_token);
+    const e = encrypt(access_token);
+    console.log("enc: ", e);
+    console.log("dec: ", decrypt(e));
+
+    const encryptedAccessToken = encrypt(access_token);
     // Get github user profile
     const profile = await axios.get("https://api.github.com/user", {
       headers: {
@@ -375,7 +397,6 @@ export const authService = {
     });
 
     const { id, login }: Record<string, string> = profile.data;
-    console.log(profile.data);
 
     // const device_id = String(id);
 
@@ -393,9 +414,9 @@ export const authService = {
       },
     });
 
-    if (provider?.scope?.includes(scope)) {
-      return `${FRONTEND_URL}/dashboard`;
-    }
+    // if (provider?.scope?.includes(scope)) {
+    //   return `${FRONTEND_URL}/dashboard`;
+    // }
 
     if (provider) {
       console.log("yes");
@@ -404,7 +425,7 @@ export const authService = {
           id: provider.id,
         },
         data: {
-          accessToken: hashedAccessToken,
+          accessToken: encryptedAccessToken,
           scope: `${scope},${provider.scope}`,
         },
       });
@@ -416,7 +437,7 @@ export const authService = {
           provider_user_id: String(id),
           provider_url: `https://github.com/${login}`,
           scope: scope,
-          accessToken: hashedAccessToken,
+          accessToken: encryptedAccessToken,
           user: {
             connect: {
               id: user.id,
