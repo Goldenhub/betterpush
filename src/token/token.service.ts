@@ -48,6 +48,7 @@ export const tokenService = {
   },
 
   async storeRefreshToken(refreshToken: string, userId: string, userAgent: string, deviceId: string, ip: string) {
+    console.log(refreshToken, userId, userAgent, deviceId, ip);
     const hashedRefreshToken = crypto.createHash("sha256").update(refreshToken).digest("hex");
     await prisma.refreshToken.upsert({
       where: {
@@ -55,7 +56,7 @@ export const tokenService = {
           user_id: userId,
           device_id: deviceId,
         },
-        user_agent: userAgent,
+        // user_agent: userAgent,
       },
       update: {
         tokenHash: hashedRefreshToken,

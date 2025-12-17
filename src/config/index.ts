@@ -19,6 +19,7 @@ const config = {
   GITHUB_OAUTH_CLIENT_SECRET: process.env.GITHUB_OAUTH_CLIENT_SECRET,
   ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
   FRONTEND_URL: process.env.FRONTEND_URL,
+  VERCEL_TOKEN: process.env.VERCEL_TOKEN,
 };
 
 export default config;

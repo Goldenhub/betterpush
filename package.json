@@ -43,6 +43,7 @@
   "dependencies": {
     "@prisma/client": "^6.18.0",
     "@react-email/components": "0.5.7",
+    "@vercel/sdk": "^1.18.2",
     "axios": "^1.13.1",
     "bcryptjs": "^3.0.3",
     "bullmq": "^5.63.0",
