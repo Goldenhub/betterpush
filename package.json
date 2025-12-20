@@ -1,0 +1,80 @@
+{
+  "name": "betterpush",
+  "version": "1.0.0",
+  "description": "One unified interface. One deploy flow.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ENV=development ts-node-dev public/index.ts",
+    "start": "node dist/public/index.js",
+    "db:migrate": "dotenv -e .env.local -- npx prisma migrate dev",
+    "db:deploy": "dotenv -e .env -- npx prisma migrate deploy",
+    "db:reset": "dotenv -e .env.local -- npx prisma migrate reset",
+    "db:reset:prod": "dotenv -e .env -- npx prisma migrate reset",
+    "db:generate": "dotenv -e .env.local -- npx prisma generate",
+    "db:generate:prod": "dotenv -e .env -- npx prisma generate",
+    "db:pull": "dotenv -e .env.local -- npx prisma db pull",
+    "db:seed": "dotenv -e .env.local -- npx prisma db seed",
+    "db:seed:prod": "dotenv -e .env -- npx prisma db seed",
+    "lint": "npx @biomejs/biome lint './src/**/*.{controller,decorator,dtos,services,}.{ts,js}' './public', './src/**/**/*.{ts,js}'",
+    "format": "prettier --write 'src/**/*.{ts,js,json}' 'public/**/*.{ts,js,json}' '*.{ts,js}'",
+    "docker:start": "docker compose up -d",
+    "docker:stop": "docker compose down",
+    "tunnel": "ngrok http 4321",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Goldenhub/betterpush.git"
+  },
+  "keywords": [
+    "deploy",
+    "facade",
+    "aggregator",
+    "push",
+    "deployment"
+  ],
+  "author": "Goldenhub",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Goldenhub/betterpush/issues"
+  },
+  "homepage": "https://github.com/Goldenhub/betterpush#readme",
+  "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "@react-email/components": "0.5.7",
+    "@vercel/sdk": "^1.18.2",
+    "axios": "^1.13.1",
+    "bcryptjs": "^3.0.3",
+    "bullmq": "^5.63.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
+    "dotenv-cli": "^11.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.10",
+    "pg-boss": "^11.1.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.3",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.10.0",
+    "@types/nodemailer": "^7.0.3",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "prisma": "^6.18.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                                String @id @default(uuid()) @db.Uuid
+  email                             String @unique
+  name                              String
+  username                          String @unique
+  password                          String?
+  email_verified                    Boolean @default(false)
+  verification_token                String?
+  verification_token_expires_at     DateTime?
+  reset_password_token              String?
+  reset_password_token_expires_at   DateTime?
+  avatar_url                        String?
+  
+
+  git_credentials                        GitCredential[]
+  deployment_provider_integrations       DeploymentProviderIntegration[]
+
+
+  refresh_tokens  RefreshToken[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model DeploymentProviderIntegration {
+  id                  String @id @default(uuid()) @db.Uuid
+  provider            String
+  accessToken         String
+  refreshToken        String?
+  user_id             String  @db.Uuid
+  user                User    @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("deployment_provider_integrations")
+}
+
+model GitCredential {
+  id                  String @id @default(uuid()) @db.Uuid
+  provider            String
+  provider_url        String
+  accessToken         String?
+  refreshToken        String?
+  provider_user_id    String
+  scope               String?
+  user_id             String  @db.Uuid
+  user                User    @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("git_credentials")
+}
+
+model RefreshToken  {
+  id              String @id @default(uuid()) @db.Uuid
+  tokenHash       String
+  user_id         String  @db.Uuid
+  expires_at      DateTime
+
+  device_id       String
+  user_agent      String
+  ip              String
+
+  user            User  @relation(fields: [user_id], references: [id])
+
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt @map("updated_at")
+
+  
+  @@unique([user_id, device_id])
+  @@map("refresh_tokens")
+}
