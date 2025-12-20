@@ -25,5 +25,5 @@
 
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/types"]
+  "include": ["src", "src/types", "public", "app.ts"]
 }
