@@ -14,8 +14,6 @@
     "db:generate": "dotenv -e .env.local -- npx prisma generate",
     "db:generate:prod": "dotenv -e .env -- npx prisma generate",
     "db:pull": "dotenv -e .env.local -- npx prisma db pull",
-    "db:seed": "dotenv -e .env.local -- npx prisma db seed",
-    "db:seed:prod": "dotenv -e .env -- npx prisma db seed",
     "lint": "npx @biomejs/biome lint './src/**/*.{controller,decorator,dtos,services,}.{ts,js}' './public', './src/**/**/*.{ts,js}'",
     "format": "prettier --write 'src/**/*.{ts,js,json}' 'public/**/*.{ts,js,json}' '*.{ts,js}'",
     "docker:start": "docker compose up -d",
