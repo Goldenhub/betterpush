@@ -15,7 +15,7 @@ export const SuccessfulPasswordResetEmail = ({ username, updatedDate }: Successf
         <Preview>You updated the password for your BetterPush account</Preview>
         <Container style={container}>
           <Section style={logo}>
-            <Img width={114} src={`${baseUrl}/logo.png`} alt="BetterPush" style={logoImg} />
+            <Img width={114} src={`${baseUrl}/betterpush-logo.png`} alt="BetterPush" style={logoImg} />
           </Section>
           <Section style={sectionsBorders}>
             <Row>

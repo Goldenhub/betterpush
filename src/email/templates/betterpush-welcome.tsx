@@ -80,7 +80,7 @@ export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
       >
         <Preview>BetterPush Welcome</Preview>
         <Body className="bg-offwhite font-sans text-base">
-          <Img src={`${baseUrl}/static/BetterPush-logo.png`} width="184" height="75" alt="BetterPush" className="mx-auto my-20" />
+          <Img src={`${baseUrl}/betterpush-logo.png`} width="184" height="75" alt="BetterPush" className="mx-auto my-20" />
           <Container className="bg-white p-45">
             <Heading className="my-0 text-center leading-8">Welcome to BetterPush</Heading>
 
@@ -96,7 +96,7 @@ export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
             <ul>{steps?.map(({ Description }) => Description)}</ul>
 
             <Section className="text-center">
-              <Button className="rounded-lg bg-brand px-[18px] py-3 text-white" href="https://betterpush.io/login">
+              <Button className="rounded-lg bg-brand px-[18px] py-3 text-white" href={`${baseUrl}/dashboard`}>
                 Go to your dashboard
               </Button>
             </Section>
@@ -119,7 +119,7 @@ export const WelcomeEmail = ({ username }: WelcomeEmailProps) => {
             <Section>
               <Row>
                 <Column className="px-20 text-right">
-                  <Link href="/unsubscribe">Unsubscribe</Link>
+                  <Link href="#">Unsubscribe</Link>
                 </Column>
               </Row>
             </Section>

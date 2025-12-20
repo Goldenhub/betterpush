@@ -12,7 +12,7 @@ import { encrypt } from "../utils/helpers";
 import { comparePassword } from "../utils/passwordHashing";
 import type { ForgotPasswordDto, LoginDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
 
-const { GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET, FRONTEND_URL } = config;
+const { GITHUB_OAUTH_CLIENT_ID, GITHUB_OAUTH_CLIENT_SECRET, FRONTEND_URL, APP_URL } = config;
 
 export const authService = {
   async signup({ email, password, username, name }: SignupDto) {
@@ -255,11 +255,11 @@ export const authService = {
   },
 
   async githubAuth() {
-    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=http://localhost:4321/api/v1/auth/github/callback`;
+    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=${APP_URL}/auth/github/callback`;
     return redirectUrl;
   },
   async githubRepo() {
-    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}&scope=repo&redirect_uri=http://localhost:4321/api/v1/auth/github/callback/repos`;
+    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}&scope=repo&redirect_uri=${APP_URL}/auth/github/callback/repos`;
     return redirectUrl;
   },
 

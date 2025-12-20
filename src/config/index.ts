@@ -20,6 +20,7 @@ const config = {
   ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
   FRONTEND_URL: process.env.FRONTEND_URL,
   VERCEL_TOKEN: process.env.VERCEL_TOKEN,
+  APP_URL: process.env.APP_URL,
 };
 
 export default config;

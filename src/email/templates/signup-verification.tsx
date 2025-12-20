@@ -14,12 +14,12 @@ const VerifyEmail = ({ username, verificationToken }: VerifyEmailProps) => {
       <Body style={main}>
         <Preview>BetterPush Verify your email address</Preview>
         <Container style={container}>
-          <Img src={`${baseUrl}/img/betterpush-logo.png`} width="40" height="33" alt="BetterPush" />
+          <Img src={`${baseUrl}/betterpush-logo.png`} width="40" height="33" alt="BetterPush" />
           <Section>
             <Text style={text}>Hi {username},</Text>
             <Text style={text}>You created an account on BetterPush</Text>
             <Text style={text}>Kindly click the button below to verify your email address. The verification link expires in 30mins</Text>
-            <Button style={button} href={`https://betterpush.io/verify-email?username=${username}&token=${verificationToken}`}>
+            <Button style={button} href={`${baseUrl}/verify-email?username=${username}&token=${verificationToken}`}>
               Verify Email
             </Button>
             <Text style={text}>If you didn't request this, just ignore and delete this message.</Text>

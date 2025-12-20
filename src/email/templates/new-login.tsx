@@ -17,7 +17,7 @@ export const LoginEmail = ({ username, loginDate, userAgent, ip }: LoginEmailPro
         <Preview>BetterPush recent login</Preview>
         <Container>
           <Section style={logo}>
-            <Img src={`${baseUrl}/logo.png`} alt="BetterPush logo" />
+            <Img src={`${baseUrl}/betterpush-logo.png`} alt="BetterPush logo" />
           </Section>
 
           <Section style={content}>
