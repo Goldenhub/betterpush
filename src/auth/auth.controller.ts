@@ -46,8 +46,8 @@ export const login = handleTryCatch(async (req: Request, res: Response) => {
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: refresh_token_expiresIn,
   });
@@ -55,8 +55,8 @@ export const login = handleTryCatch(async (req: Request, res: Response) => {
   // send the access token via http-only cookie
   res.cookie("access-token", accessToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: access_token_expiresIn,
   });
@@ -108,8 +108,8 @@ export const refreshToken = handleTryCatch(async (req: Request, res: Response) =
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", newRefreshToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: refresh_token_expiresIn,
   });
@@ -117,8 +117,8 @@ export const refreshToken = handleTryCatch(async (req: Request, res: Response) =
   // send the access token via http-only cookie
   res.cookie("access-token", newAccessToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: access_token_expiresIn,
   });
@@ -190,8 +190,8 @@ export const githubOAuthLoginCallback = handleTryCatch(async (req: Request, res:
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: refresh_token_expiresIn,
   });
@@ -199,8 +199,8 @@ export const githubOAuthLoginCallback = handleTryCatch(async (req: Request, res:
   // send the access token via http-only cookie
   res.cookie("access-token", accessToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
     maxAge: access_token_expiresIn,
   });

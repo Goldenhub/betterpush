@@ -3,6 +3,7 @@ import { CreatePasswordDto, ForgotPasswordDto, LoginDto, LogoutDto, RefreshToken
 import { DeployDto, GetProjectsDto, GetTeamsDto, ProjectDto } from "../deployment/deployment.dto";
 import { GetUserDto, UpdateUserDto } from "../user/user.dto";
 import { validator } from "../utils/validator";
+import { ConnectProviderCallbackDto, ConnectProviderDto } from "../providers/providers.dto";
 
 export const validate = {
   // Auth
@@ -51,5 +52,13 @@ export const validate = {
   },
   getProjects: async (req: Request, res: Response, next: NextFunction) => {
     return validator(req, res, next, GetProjectsDto);
+  },
+
+  // providers
+  connectProvider: async (req: Request, res: Response, next: NextFunction) => {
+    return validator(req, res, next, ConnectProviderDto);
+  },
+  connectProviderCallback: async (req: Request, res: Response, next: NextFunction) => {
+    return validator(req, res, next, ConnectProviderCallbackDto);
   },
 };

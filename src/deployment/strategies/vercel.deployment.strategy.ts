@@ -2,9 +2,9 @@ import { Vercel } from "@vercel/sdk";
 import type { CreateDeploymentResponseBody } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectResponseBody } from "@vercel/sdk/models/createprojectop.js";
 import config from "../../config";
-import { VercelAdapter } from "../adapters/vercel.adapter";
+import { VercelAdapter } from "../adapters/vercel.deployment.adapter";
 import type { DeployDto, GetProjectsDto, ProjectDto } from "../deployment.dto";
-import type { DeployStrategy } from "./strategy.interface";
+import type { DeployStrategy } from "./strategy.deployment.interface";
 
 export class VercelDeployStrategy implements DeployStrategy {
   private adapter = new VercelAdapter();

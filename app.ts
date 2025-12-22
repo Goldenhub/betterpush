@@ -9,7 +9,7 @@ import "reflect-metadata";
 const app = express();
 
 const corsOptions = {
-  origin: "*",
+  origin: ["http://localhost:5173", "https://betterpush.vercel.app"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
   credentials: true,

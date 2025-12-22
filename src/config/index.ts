@@ -21,6 +21,9 @@ const config = {
   FRONTEND_URL: process.env.FRONTEND_URL,
   VERCEL_TOKEN: process.env.VERCEL_TOKEN,
   APP_URL: process.env.APP_URL,
+  CLIENT_ID_VERCEL: process.env.CLIENT_ID_VERCEL,
+  CLIENT_SECRET_VERCEL: process.env.CLIENT_SECRET_VERCEL,
+  REDIRECT_URI_VERCEL: process.env.REDIRECT_URI_VERCEL,
 };
 
 export default config;
