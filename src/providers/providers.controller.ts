@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { CustomError } from "../utils/customError";
 import { handleTryCatch } from "../utils/handleTryCatch";
 import type { ProvidersControllerStrategy } from "./strategies/strategy.provider.interface";
-import { VercelControllerStrategy } from "./strategies/vercel.controller.strategy";
+import { VercelControllerStrategy } from "./strategies/vercel/vercel.controller.strategy";
 
 class ProvidersController {
   private strategies: Record<string, ProvidersControllerStrategy> = {

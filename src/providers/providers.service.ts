@@ -1,7 +1,7 @@
 import { CustomError } from "../utils/customError";
 import type { ConnectProviderCallbackDto, ConnectProviderDto } from "./providers.dto";
 import type { ProvidersServiceStrategy } from "./strategies/strategy.provider.interface";
-import { VercelServiceStrategy } from "./strategies/vercel.service.strategy";
+import { VercelServiceStrategy } from "./strategies/vercel/vercel.service.strategy";
 
 export class ProvidersService {
   private strategies: Record<string, ProvidersServiceStrategy> = {

@@ -14,7 +14,4 @@ export class ConnectProviderCallbackDto {
 
   @IsString()
   provider!: string;
-
-  @IsString()
-  teamId?: string;
 }

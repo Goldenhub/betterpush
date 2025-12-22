@@ -15,7 +15,6 @@ export class VercelProviderAdapter {
       provider: data.provider,
       code: data.code,
       state: data.state,
-      team_id: data.teamId,
     };
   }
 }

@@ -1,12 +1,12 @@
 import axios from "axios";
-import config from "../../config";
-import prisma from "../../prisma/client";
-import { CustomError } from "../../utils/customError";
-import { encrypt, generateSecureRandomString } from "../../utils/helpers";
-import { VercelProviderAdapter } from "../adapters/vercel.provider.adapter";
-import type { ConnectProviderCallbackDto } from "../providers.dto";
-import type { VercelTokenData } from "../providers.interface";
-import type { ProvidersServiceStrategy } from "./strategy.provider.interface";
+import config from "../../../config";
+import prisma from "../../../prisma/client";
+import { CustomError } from "../../../utils/customError";
+import { encrypt, generateSecureRandomString } from "../../../utils/helpers";
+import { VercelProviderAdapter } from "../../adapters/vercel.provider.adapter";
+import type { ConnectProviderCallbackDto } from "../../providers.dto";
+import type { VercelTokenData } from "../../providers.interface";
+import type { ProvidersServiceStrategy } from "../strategy.provider.interface";
 
 const { REDIRECT_URI_VERCEL, FRONTEND_URL, CLIENT_ID_VERCEL, CLIENT_SECRET_VERCEL } = config;
 
@@ -62,10 +62,11 @@ export class VercelServiceStrategy implements ProvidersServiceStrategy {
     // validate nonce
     await prisma.deploymentProviderIntegration.create({
       data: {
-        provider: payload.provider,
         accessToken: encrypt(tokenData.access_token),
+        provider: payload.provider,
+        provider_user_id: tokenData.user_id,
+        team_id: tokenData.team_id || null,
         user_id: oauthState.user_id,
-        team_id: payload.team_id || null,
       },
     });
 
