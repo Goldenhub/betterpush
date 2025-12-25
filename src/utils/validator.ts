@@ -10,7 +10,7 @@ export const validator = async (req: Request, res: Response, next: NextFunction,
     ...reqObj,
     ...req.params,
     ...req.query,
-    ...req.user
+    ...req.user,
   };
   if (!reqObj) {
     return responseHandler.error(res, new CustomError("Payload required", 400));

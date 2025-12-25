@@ -8,7 +8,7 @@ export class ProvidersService {
     vercel: new VercelServiceStrategy(),
   };
 
-  async connect(data: ConnectProviderDto & { user_id: string }) {
+  async connect(data: ConnectProviderDto & { id: string }) {
     const strategy = this.strategies[data.provider];
     if (!strategy) {
       throw new CustomError(`No strategy found for provider: ${data.provider}`, 400);

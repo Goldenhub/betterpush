@@ -1,6 +1,6 @@
 import type { Framework } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectFramework, CreateProjectProjectsType } from "@vercel/sdk/models/createprojectop.js";
-import { IsString } from "class-validator";
+import { IsString, IsUUID } from "class-validator";
 
 export class DeployDto {
   @IsString()
@@ -29,9 +29,13 @@ export class DeployDto {
 
   @IsString()
   framework!: Framework;
+
+  // user id
+  @IsUUID()
+  id!: string;
 }
 
-export class ProjectDto {
+export class CreateProjectDto {
   @IsString()
   teamId!: string;
 
@@ -49,11 +53,18 @@ export class ProjectDto {
 
   @IsString()
   provider!: string;
+  // user id
+  @IsUUID()
+  id!: string;
 }
 
 export class GetTeamsDto {
   @IsString()
   provider!: string;
+
+  // user id
+  @IsUUID()
+  id!: string;
 }
 
 export class GetProjectsDto {
@@ -62,4 +73,8 @@ export class GetProjectsDto {
 
   @IsString()
   provider!: string;
+
+  // user id
+  @IsUUID()
+  id!: string;
 }

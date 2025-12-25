@@ -1,9 +1,50 @@
-import type { CreateDeploymentRequestBody, GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploymentop.js";
+import { Vercel } from "@vercel/sdk";
+import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
-import type { DeployDto, ProjectDto } from "../deployment.dto";
+import type { CreateProjectDto, DeployDto } from "../deployment.dto";
 
-export class VercelAdapter {
-  payload(data: DeployDto): CreateDeploymentRequestBody {
+export class VercelDeploymentAdapter {
+  private client: Vercel;
+
+  constructor(accessToken: string) {
+    this.client = new Vercel({
+      bearerToken: accessToken,
+    });
+  }
+
+  async deploy(data: DeployDto) {
+    const response = await this.client.deployments.createDeployment({
+      teamId: data.teamId,
+      requestBody: this.deployPayload(data),
+    });
+
+    return response;
+  }
+
+  async createProject(data: CreateProjectDto) {
+    const response = await this.client.projects.createProject({
+      teamId: data.teamId,
+      requestBody: this.projectPayload(data),
+    });
+
+    return response;
+  }
+
+  async getTeams() {
+    const response = await this.client.teams.getTeams({
+      limit: 20,
+    });
+    return response;
+  }
+
+  async getProjects(teamId: string) {
+    const response = await this.client.projects.getProjects({
+      teamId,
+    });
+    return response;
+  }
+
+  deployPayload(data: DeployDto) {
     return {
       name: data.name,
       project: data.project,
@@ -17,9 +58,11 @@ export class VercelAdapter {
       projectSettings: {
         framework: data.framework,
       } as ProjectSettings,
+      provider: data.provider,
+      teamId: data.teamId,
     };
   }
-  projectPayload(data: ProjectDto): CreateProjectRequestBody {
+  projectPayload(data: CreateProjectDto): CreateProjectRequestBody {
     return {
       name: data.projectName,
       gitRepository: {

@@ -1,0 +1,56 @@
+import type { NextFunction, Request, Response } from "express";
+import { responseHandler } from "../../../utils/responseHandler";
+import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto } from "../../deployment.dto";
+import { DeploymentService } from "../../deployment.service";
+import type { DeploymentControllerStrategy } from "../strategy.deployment.interface";
+
+export class VercelDeploymentControllerStrategy implements DeploymentControllerStrategy {
+  constructor(private readonly deploymentService = new DeploymentService()) {}
+
+  async deploy(req: Request, res: Response, _next: NextFunction) {
+    // const payload = this.adapter.deployPayload(req.body as DeployDto);
+    const { name, branch, framework, gitHost, org, project, provider, repo, teamId }: Omit<DeployDto, "id"> = req.body;
+    const { id } = req.user;
+
+    const response = await this.deploymentService.deploy({
+      name,
+      branch,
+      framework,
+      gitHost,
+      org,
+      project,
+      provider,
+      repo,
+      teamId,
+      id,
+    });
+
+    return responseHandler.success(res, 201, "Deployed", response);
+  }
+
+  async createProject(req: Request, res: Response, _next: NextFunction) {
+    const { projectName, framework, repo, teamId, type, provider }: Omit<CreateProjectDto, "id"> = req.body;
+    const { id } = req.user;
+    const response = await this.deploymentService.createProject({ projectName, framework, repo, teamId, type, provider, id });
+
+    return responseHandler.success(res, 201, "Project created", response);
+  }
+
+  async getTeams(req: Request, res: Response, _next: NextFunction) {
+    const { provider }: Pick<GetTeamsDto, "provider"> = req.body;
+    const { id } = req.user;
+
+    const response = await this.deploymentService.getTeams({ provider, id });
+
+    return responseHandler.success(res, 201, "Teams fetched", response);
+  }
+
+  async getProjects(req: Request, res: Response, _next: NextFunction) {
+    const { provider, teamId }: Omit<GetProjectsDto, "id"> = req.body;
+    const { id } = req.user;
+
+    const response = await this.deploymentService.getProjects({ provider, teamId, id });
+
+    return responseHandler.success(res, 201, "Projects fetched", response);
+  }
+}
