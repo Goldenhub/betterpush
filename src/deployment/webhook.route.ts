@@ -4,6 +4,6 @@ import { webhook } from "./deployment.controller";
 
 const webhookRouter = express.Router();
 
-webhookRouter.post("/:provider", validate.deploy, webhook);
+webhookRouter.post("/:provider", validate.providerWebhook, webhook);
 
 export default webhookRouter;
