@@ -63,8 +63,6 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     const signature = req.headers["x-vercel-signature"] as string;
     const rawBody = JSON.stringify(req.body);
 
-    console.log(req.body);
-
     const { CLIENT_SECRET_VERCEL } = config;
 
     const expected = crypto
