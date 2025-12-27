@@ -69,7 +69,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
     const expected = crypto
       .createHmac("sha256", CLIENT_SECRET_VERCEL as string)
-      .update(payload as unknown as BinaryLike)
+      .update(JSON.stringify(payload))
       .digest("hex");
 
     if (signature !== expected) {
