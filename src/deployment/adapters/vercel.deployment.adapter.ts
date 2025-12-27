@@ -1,7 +1,7 @@
 import { Vercel } from "@vercel/sdk";
 import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
-import type { CreateProjectDto, DeployDto } from "../deployment.dto";
+import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
 
 export class VercelDeploymentAdapter {
   private client: Vercel;
@@ -44,7 +44,9 @@ export class VercelDeploymentAdapter {
     return response;
   }
 
-  async webhook(payload: Record<string, unknown>) {
+  async webhook({ payload, type }: Pick<ProviderWebhookDTO, "payload" | "type">) {
+    console.log(payload);
+    console.log(type);
     return payload;
   }
 
