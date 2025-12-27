@@ -63,7 +63,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     const { payload }: Pick<ProviderWebhookDTO, "payload"> = req.body;
     const signature = req.headers["x-vercel-signature"] as string;
 
-    console.log(req.params);
+    console.log(req.body);
     console.log("signature:", signature);
 
     // const { CLIENT_SECRET_VERCEL } = config;
