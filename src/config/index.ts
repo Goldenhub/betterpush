@@ -24,6 +24,8 @@ const config = {
   CLIENT_ID_VERCEL: process.env.CLIENT_ID_VERCEL,
   CLIENT_SECRET_VERCEL: process.env.CLIENT_SECRET_VERCEL,
   REDIRECT_URI_VERCEL: process.env.REDIRECT_URI_VERCEL,
+  COOKIE_SAMESITE: process.env.COOKIE_SAMESITE,
+  COOKIE_SECURE: process.env.COOKIE_SECURE,
 };
 
 export default config;
