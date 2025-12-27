@@ -1,9 +1,10 @@
 import type { CreateDeploymentResponseBody } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectResponseBody } from "@vercel/sdk/models/createprojectop.js";
 import { VercelDeploymentAdapter } from "../../adapters/vercel.deployment.adapter";
-import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto } from "../../deployment.dto";
+import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
 import type { ITokenProvider } from "../../deployment.interface";
 import type { DeploymentServiceStrategy } from "../strategy.deployment.interface";
+import { getAdapter } from "axios";
 
 export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   constructor(private tokenProvider: ITokenProvider) {}
@@ -42,5 +43,11 @@ export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
     });
     const adapter = new VercelDeploymentAdapter(token);
     return adapter.getProjects(data.teamId);
+  }
+
+  async webhook(data: Pick<ProviderWebhookDTO, "event">) {
+    const adapter = new VercelDeploymentAdapter();
+    const response = await adapter.webhook(data.event);
+    console.log(response);
   }
 }

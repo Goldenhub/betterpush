@@ -40,6 +40,14 @@ class DeploymentController {
     }
     return await strategy.getProjects(req, res, next);
   });
+
+  webhook = handleTryCatch(async (req: Request, res: Response, next: NextFunction) => {
+    const strategy = this.strategies[req.params.provider as string];
+    if (!strategy) {
+      throw new CustomError(`No strategy found for provider: ${req.params.provider}`, 400);
+    }
+    return await strategy.webhook(req, res, next);
+  });
 }
 
 export const { deploy, createProject, getTeams, getProjects } = new DeploymentController();

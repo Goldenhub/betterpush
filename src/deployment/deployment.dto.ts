@@ -78,3 +78,11 @@ export class GetProjectsDto {
   @IsUUID()
   id!: string;
 }
+
+export class ProviderWebhookDTO {
+  @IsString()
+  provider!: string;
+
+  @IsString()
+  event!: string;
+}

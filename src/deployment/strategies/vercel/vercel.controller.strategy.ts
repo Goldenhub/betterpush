@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { responseHandler } from "../../../utils/responseHandler";
-import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto } from "../../deployment.dto";
+import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
 import { DeploymentService } from "../../deployment.service";
 import type { DeploymentControllerStrategy } from "../strategy.deployment.interface";
 
@@ -52,5 +52,11 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     const response = await this.deploymentService.getProjects({ provider, teamId, id });
 
     return responseHandler.success(res, 201, "Projects fetched", response);
+  }
+
+  async webhook(req: Request, _res: Response, _next: NextFunction) {
+    const { provider } = req.params as Pick<ProviderWebhookDTO, "provider">;
+    const { event }: Pick<ProviderWebhookDTO, "event"> = req.body;
+    await this.deploymentService.webhook({ provider, event });
   }
 }

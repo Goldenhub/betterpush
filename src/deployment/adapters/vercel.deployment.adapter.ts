@@ -6,7 +6,7 @@ import type { CreateProjectDto, DeployDto } from "../deployment.dto";
 export class VercelDeploymentAdapter {
   private client: Vercel;
 
-  constructor(accessToken: string) {
+  constructor(accessToken?: string) {
     this.client = new Vercel({
       bearerToken: accessToken,
     });
@@ -42,6 +42,13 @@ export class VercelDeploymentAdapter {
       teamId,
     });
     return response;
+  }
+
+  async webhook(event: string) {
+    console.log(event);
+    if (event === "deployment.succeeded") {
+      return "succeeded";
+    }
   }
 
   deployPayload(data: DeployDto) {
