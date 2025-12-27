@@ -46,7 +46,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
     const response = await this.deploymentService.getTeams({ provider, id });
 
-    return responseHandler.success(res, 201, "Teams fetched", response);
+    return responseHandler.success(res, 200, "Teams fetched", response);
   }
 
   async getProjects(req: Request, res: Response, _next: NextFunction) {
@@ -55,7 +55,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
     const response = await this.deploymentService.getProjects({ provider, teamId, id });
 
-    return responseHandler.success(res, 201, "Projects fetched", response);
+    return responseHandler.success(res, 200, "Projects fetched", response);
   }
 
   async webhook(req: Request, res: Response, _next: NextFunction) {
@@ -75,6 +75,6 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     }
 
     await this.deploymentService.webhook({ provider, payload });
-    return res.end();
+    return responseHandler.success(res, 200, "Webhook received");
   }
 }
