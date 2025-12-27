@@ -121,3 +121,9 @@ export function decrypt(data: string) {
   const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
   return decrypted.toString();
 }
+
+export function generateSecureRandomString(length: number) {
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+  const randomBytes = crypto.getRandomValues(new Uint8Array(length));
+  return Array.from(randomBytes, (byte) => charset[byte % charset.length]).join("");
+}
