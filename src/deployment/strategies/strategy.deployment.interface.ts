@@ -6,7 +6,7 @@ export interface DeploymentServiceStrategy {
   createProject(data: CreateProjectDto): Promise<unknown>;
   getTeams(data: GetTeamsDto): Promise<unknown>;
   getProjects(data: GetProjectsDto): Promise<unknown>;
-  webhook(data: ProviderWebhookDTO): Promise<void>;
+  webhook(data: ProviderWebhookDTO): Promise<unknown>;
 }
 
 export interface DeploymentControllerStrategy {
@@ -14,5 +14,5 @@ export interface DeploymentControllerStrategy {
   createProject: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   getTeams: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   getProjects: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-  webhook: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  webhook: (req: Request, res: Response, next: NextFunction) => Promise<unknown>;
 }

@@ -44,9 +44,9 @@ export class VercelDeploymentAdapter {
     return response;
   }
 
-  async webhook(event: Record<string, unknown>) {
-    console.log(event);
-    return event;
+  async webhook(payload: Record<string, unknown>) {
+    console.log(payload);
+    return payload;
   }
 
   deployPayload(data: DeployDto) {
