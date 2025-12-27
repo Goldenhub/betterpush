@@ -1,6 +1,6 @@
 import type { Framework } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectFramework, CreateProjectProjectsType } from "@vercel/sdk/models/createprojectop.js";
-import { IsString, IsUUID } from "class-validator";
+import { IsObject, IsString, IsUUID } from "class-validator";
 
 export class DeployDto {
   @IsString()
@@ -83,6 +83,6 @@ export class ProviderWebhookDTO {
   @IsString()
   provider!: string;
 
-  @IsString()
-  event!: string;
+  @IsObject()
+  event!: Record<string, unknown>;
 }

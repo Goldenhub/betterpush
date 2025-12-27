@@ -44,11 +44,9 @@ export class VercelDeploymentAdapter {
     return response;
   }
 
-  async webhook(event: string) {
+  async webhook(event: Record<string, unknown>) {
     console.log(event);
-    if (event === "deployment.succeeded") {
-      return "succeeded";
-    }
+    return event;
   }
 
   deployPayload(data: DeployDto) {
