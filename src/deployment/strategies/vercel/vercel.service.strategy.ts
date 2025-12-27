@@ -4,7 +4,6 @@ import { VercelDeploymentAdapter } from "../../adapters/vercel.deployment.adapte
 import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
 import type { ITokenProvider } from "../../deployment.interface";
 import type { DeploymentServiceStrategy } from "../strategy.deployment.interface";
-import { getAdapter } from "axios";
 
 export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   constructor(private tokenProvider: ITokenProvider) {}
