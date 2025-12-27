@@ -84,5 +84,5 @@ export class ProviderWebhookDTO {
   provider!: string;
 
   @IsObject()
-  event!: Record<string, unknown>;
+  payload!: Record<string, unknown>;
 }

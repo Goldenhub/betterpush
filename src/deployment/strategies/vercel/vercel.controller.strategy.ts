@@ -1,4 +1,8 @@
+import type { BinaryLike } from "node:crypto";
+import crypto from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
+import config from "../../../config";
+import { CustomError } from "../../../utils/customError";
 import { responseHandler } from "../../../utils/responseHandler";
 import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
 import { DeploymentService } from "../../deployment.service";
@@ -54,9 +58,23 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     return responseHandler.success(res, 201, "Projects fetched", response);
   }
 
-  async webhook(req: Request, _res: Response, _next: NextFunction) {
+  async webhook(req: Request, res: Response, _next: NextFunction) {
     const { provider } = req.params as Pick<ProviderWebhookDTO, "provider">;
-    const { event }: Pick<ProviderWebhookDTO, "event"> = req.body;
-    await this.deploymentService.webhook({ provider, event });
+    const { payload }: Pick<ProviderWebhookDTO, "payload"> = req.body;
+    const signature = req.headers["x-vercel-signature"] as string;
+
+    const { CLIENT_SECRET_VERCEL } = config;
+
+    const expected = crypto
+      .createHmac("sha256", CLIENT_SECRET_VERCEL as string)
+      .update(payload as unknown as BinaryLike)
+      .digest("hex");
+
+    if (signature !== expected) {
+      throw new CustomError("Invalid webhook signature", 400);
+    }
+
+    await this.deploymentService.webhook({ provider, payload });
+    return res.end();
   }
 }
