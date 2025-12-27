@@ -45,7 +45,6 @@ export class VercelDeploymentAdapter {
   }
 
   async webhook(payload: Record<string, unknown>) {
-    console.log(payload);
     return payload;
   }
 
