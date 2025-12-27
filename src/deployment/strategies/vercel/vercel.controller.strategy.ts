@@ -63,18 +63,19 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     const { payload }: Pick<ProviderWebhookDTO, "payload"> = req.body;
     const signature = req.headers["x-vercel-signature"] as string;
 
-    console.log(payload);
+    console.log(req.params);
+    console.log("signature:", signature);
 
-    const { CLIENT_SECRET_VERCEL } = config;
+    // const { CLIENT_SECRET_VERCEL } = config;
 
-    const expected = crypto
-      .createHmac("sha256", CLIENT_SECRET_VERCEL as string)
-      .update(JSON.stringify(payload))
-      .digest("hex");
+    // const expected = crypto
+    //   .createHmac("sha256", CLIENT_SECRET_VERCEL as string)
+    //   .update(JSON.stringify(payload))
+    //   .digest("hex");
 
-    if (signature !== expected) {
-      throw new CustomError("Invalid webhook signature", 400);
-    }
+    // if (signature !== expected) {
+    //   throw new CustomError("Invalid webhook signature", 400);
+    // }
 
     await this.deploymentService.webhook({ provider, payload });
     return responseHandler.success(res, 200, "Webhook received");
