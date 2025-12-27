@@ -85,4 +85,7 @@ export class ProviderWebhookDTO {
 
   @IsObject()
   payload!: Record<string, unknown>;
+
+  @IsString()
+  type!: string;
 }

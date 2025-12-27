@@ -1,4 +1,3 @@
-import type { BinaryLike } from "node:crypto";
 import crypto from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
 import config from "../../../config";
@@ -60,7 +59,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
   async webhook(req: Request, res: Response, _next: NextFunction) {
     const { provider } = req.params as Pick<ProviderWebhookDTO, "provider">;
-    const { payload }: Pick<ProviderWebhookDTO, "payload"> = req.body;
+    const { payload, type }: Omit<ProviderWebhookDTO, "provider"> = req.body;
     const signature = req.headers["x-vercel-signature"] as string;
 
     console.log(req.body);
@@ -79,7 +78,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
       throw new CustomError("Invalid webhook signature", 400);
     }
 
-    await this.deploymentService.webhook({ provider, payload });
+    await this.deploymentService.webhook({ provider, payload, type });
     return responseHandler.success(res, 200, "Webhook received");
   }
 }
