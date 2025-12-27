@@ -13,6 +13,6 @@ router.use("/users", userRouter);
 router.use("/repositories", repoRouter);
 router.use("/deployments", deploymentRouter);
 router.use("/integrations", providerIntegrationRouter);
-router.use("/webhook", webhookRouter);
+router.use("/webhooks", webhookRouter);
 
 export default router;
