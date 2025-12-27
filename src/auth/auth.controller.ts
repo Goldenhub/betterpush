@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import config from "../config";
 import { SECONDS_IN_A_DAY } from "../constants";
 import type { User } from "../generated/prisma";
@@ -8,7 +8,7 @@ import { responseHandler } from "../utils/responseHandler";
 import type { CreatePasswordDto, ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "./auth.dto";
 import { authService } from "./auth.service";
 
-const { REFRESH_TOKEN_EXPIRATION } = config;
+const { REFRESH_TOKEN_EXPIRATION, COOKIE_SAMESITE, COOKIE_SECURE } = config;
 const refresh_token_expiresIn = Number(REFRESH_TOKEN_EXPIRATION) * SECONDS_IN_A_DAY * 1000;
 const access_token_expiresIn = 15 * 60 * 1000; // 15 minutes
 
@@ -46,8 +46,8 @@ export const login = handleTryCatch(async (req: Request, res: Response) => {
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
     maxAge: refresh_token_expiresIn,
   });
@@ -55,8 +55,8 @@ export const login = handleTryCatch(async (req: Request, res: Response) => {
   // send the access token via http-only cookie
   res.cookie("access-token", accessToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
     maxAge: access_token_expiresIn,
   });
@@ -108,8 +108,8 @@ export const refreshToken = handleTryCatch(async (req: Request, res: Response) =
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", newRefreshToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
     maxAge: refresh_token_expiresIn,
   });
@@ -154,15 +154,15 @@ export const logout = handleTryCatch(async (req: Request, res: Response) => {
 
   res.clearCookie("refresh-token", {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
   });
 
   res.clearCookie("access-token", {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
   });
 
@@ -190,8 +190,8 @@ export const githubOAuthLoginCallback = handleTryCatch(async (req: Request, res:
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
     maxAge: refresh_token_expiresIn,
   });
@@ -199,8 +199,8 @@ export const githubOAuthLoginCallback = handleTryCatch(async (req: Request, res:
   // send the access token via http-only cookie
   res.cookie("access-token", accessToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: !!COOKIE_SECURE,
+    sameSite: COOKIE_SAMESITE as CookieOptions["sameSite"],
     path: "/",
     maxAge: access_token_expiresIn,
   });
