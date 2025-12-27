@@ -61,6 +61,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     const { provider } = req.params as Pick<ProviderWebhookDTO, "provider">;
     const { payload, type }: Omit<ProviderWebhookDTO, "provider"> = req.body;
     const signature = req.headers["x-vercel-signature"] as string;
+    const rawBody = JSON.stringify(payload);
 
     console.log(req.body);
 
@@ -68,7 +69,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
     const expected = crypto
       .createHmac("sha1", CLIENT_SECRET_VERCEL as string)
-      .update(JSON.stringify(payload))
+      .update(Buffer.from(rawBody, "utf-8"))
       .digest("hex");
 
     console.log("signature:", signature);
