@@ -50,4 +50,4 @@ class DeploymentController {
   });
 }
 
-export const { deploy, createProject, getTeams, getProjects } = new DeploymentController();
+export const { deploy, createProject, getTeams, getProjects, webhook } = new DeploymentController();
