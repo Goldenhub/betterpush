@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { CreatePasswordDto, ForgotPasswordDto, LoginDto, LogoutDto, RefreshTokenDto, ResetPasswordDto, SignupDto, VerifyEmailDto } from "../auth/auth.dto";
-import { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto } from "../deployment/deployment.dto";
+import { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../deployment/deployment.dto";
 import { ConnectProviderCallbackDto, ConnectProviderDto } from "../providers/providers.dto";
 import { GetUserDto, UpdateUserDto } from "../user/user.dto";
 import { validator } from "../utils/validator";
@@ -52,6 +52,9 @@ export const validate = {
   },
   getProjects: async (req: Request, res: Response, next: NextFunction) => {
     return validator(req, res, next, GetProjectsDto);
+  },
+  providerWebhook: async (req: Request, res: Response, next: NextFunction) => {
+    return validator(req, res, next, ProviderWebhookDTO);
   },
 
   // providers
