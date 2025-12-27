@@ -44,9 +44,9 @@ export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
     return adapter.getProjects(data.teamId);
   }
 
-  async webhook(data: Pick<ProviderWebhookDTO, "payload">) {
+  async webhook(data: ProviderWebhookDTO) {
     const adapter = new VercelDeploymentAdapter();
     const response = await adapter.webhook(data.payload);
-    console.log(response);
+    return response;
   }
 }
