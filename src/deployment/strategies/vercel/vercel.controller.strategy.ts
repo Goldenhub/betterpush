@@ -44,7 +44,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
       res.end();
     });
 
-    const response = await this.deploymentService.streamDeployment({ provider, deployment_id, user_id: id });
+    const response = await this.deploymentService.streamDeployment({ provider, deployment_id, id });
 
     if (!response) {
       res.write(`event: error\n`);

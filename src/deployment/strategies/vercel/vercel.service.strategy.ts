@@ -46,7 +46,7 @@ export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   async streamDeployment(data: StreamDeploymentDto) {
     const token = await this.tokenProvider.getToken({
       provider: data.provider,
-      user_id: data.user_id,
+      user_id: data.id,
     });
     const adapter = new VercelDeploymentAdapter(token);
     return adapter.streamDeployment(data.deployment_id);
