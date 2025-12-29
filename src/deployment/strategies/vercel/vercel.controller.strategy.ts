@@ -32,7 +32,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
   }
 
   async streamDeployment(req: Request, res: Response, _next: NextFunction) {
-    const { provider, deployment_id }: StreamDeploymentDto = req.body;
+    const { deployment_id, provider } = req.params as unknown as StreamDeploymentDto;
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
