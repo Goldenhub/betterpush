@@ -8,6 +8,6 @@ deploymentRouter.post("/deploy", authenticate, validate.deploy, deploy);
 deploymentRouter.post("/projects", authenticate, validate.createProject, createProject);
 deploymentRouter.get("/projects", authenticate, validate.getProjects, getProjects);
 deploymentRouter.get("/teams", authenticate, validate.getTeams, getTeams);
-deploymentRouter.get("/deployments/:id/stream", authenticate, validate.streamDeployment, streamDeployment);
+deploymentRouter.get("/:id/stream", authenticate, validate.streamDeployment, streamDeployment);
 
 export default deploymentRouter;
