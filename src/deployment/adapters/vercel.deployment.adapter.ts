@@ -2,6 +2,7 @@ import { Vercel } from "@vercel/sdk";
 import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
 import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
+import prisma from "../../prisma/client";
 
 export class VercelDeploymentAdapter {
   private client: Vercel;
@@ -13,12 +14,30 @@ export class VercelDeploymentAdapter {
   }
 
   async deploy(data: DeployDto) {
-    const response = await this.client.deployments.createDeployment({
+    const deployment = await this.client.deployments.createDeployment({
       teamId: data.teamId,
       requestBody: this.deployPayload(data),
     });
 
+    const response = await prisma.deployment.create({
+      data: {
+        deployment_id: deployment.id,
+        user_id: data.id,
+        provider: data.provider,
+      },
+    });
+
     return response;
+  }
+
+  async streamDeployment(id: string) {
+    const result = await this.client.deployments.getDeploymentEvents({
+      idOrUrl: id,
+      direction: "forward",
+      follow: 1,
+    });
+
+    return result;
   }
 
   async createProject(data: CreateProjectDto) {
@@ -45,8 +64,20 @@ export class VercelDeploymentAdapter {
   }
 
   async webhook({ payload, type }: Pick<ProviderWebhookDTO, "payload" | "type">) {
-    console.log(payload);
-    console.log(type);
+    switch (type) {
+      case "deployment.succeeded":
+        console.log("deployment successful");
+        break;
+      case "project.created":
+        console.log("project created");
+        break;
+      default:
+        console.log({
+          message: "unhandled event type",
+          type,
+          payload,
+        });
+    }
     return payload;
   }
 

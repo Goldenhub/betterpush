@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import config from "../../../config";
 import { CustomError } from "../../../utils/customError";
 import { responseHandler } from "../../../utils/responseHandler";
-import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
+import type { StreamDeploymentDto, CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
 import { DeploymentService } from "../../deployment.service";
 import type { DeploymentControllerStrategy } from "../strategy.deployment.interface";
 
@@ -29,6 +29,35 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     });
 
     return responseHandler.success(res, 201, "Deployed", response);
+  }
+
+  async streamDeployment(req: Request, res: Response, _next: NextFunction) {
+    const { provider, deployment_id }: StreamDeploymentDto = req.body;
+    const { id } = req.user;
+
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders();
+
+    req.on("close", () => {
+      res.end();
+    });
+
+    const response = await this.deploymentService.streamDeployment({ provider, deployment_id, user_id: id });
+
+    if (!response) {
+      res.write(`event: error\n`);
+      res.write(`data: ${JSON.stringify({ message: "Failed to connect to Vercel" })}\n\n`);
+      res.end();
+      return;
+    }
+
+    // Pipe raw chunks → browser SSE
+    for await (const chunk of response as Record<string, unknown>[]) {
+      if (res.writableEnded) break;
+      res.write(chunk);
+    }
   }
 
   async createProject(req: Request, res: Response, _next: NextFunction) {

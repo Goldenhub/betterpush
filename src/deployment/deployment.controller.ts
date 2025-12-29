@@ -17,6 +17,14 @@ class DeploymentController {
     return strategy.deploy(req, res, next);
   });
 
+  streamDeployment = handleTryCatch(async (req: Request, res: Response, next: NextFunction) => {
+    const strategy = this.strategies[req.body.provider as string];
+    if (!strategy) {
+      throw new CustomError(`No strategy found for provider: ${req.body.provider}`, 400);
+    }
+    return strategy.streamDeployment(req, res, next);
+  });
+
   createProject = handleTryCatch(async (req: Request, res: Response, next: NextFunction) => {
     const strategy = this.strategies[req.body.provider as string];
     if (!strategy) {
@@ -50,4 +58,4 @@ class DeploymentController {
   });
 }
 
-export const { deploy, createProject, getTeams, getProjects, webhook } = new DeploymentController();
+export const { deploy, streamDeployment, createProject, getTeams, getProjects, webhook } = new DeploymentController();
