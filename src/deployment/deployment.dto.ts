@@ -44,7 +44,7 @@ export class StreamDeploymentDto {
 
   // user id
   @IsUUID()
-  user_id!: string;
+  id!: string;
 }
 
 export class CreateProjectDto {
