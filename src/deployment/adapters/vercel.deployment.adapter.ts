@@ -40,6 +40,14 @@ export class VercelDeploymentAdapter {
     return result;
   }
 
+  async getDeploymentDetailsFromDB(deployment_id: string) {
+    return prisma.deployment.findFirst({
+      where: {
+        deployment_id,
+      },
+    });
+  }
+
   async createProject(data: CreateProjectDto) {
     const response = await this.client.projects.createProject({
       teamId: data.teamId,
