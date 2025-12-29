@@ -11,3 +11,11 @@ export interface IGetToken {
   provider_user_id: string;
   scope?: string;
 }
+
+export interface IDeploymentResponse {
+  id: string;
+  deployment_id: string;
+  user_id: string;
+  provider: string;
+  url: string | null;
+}

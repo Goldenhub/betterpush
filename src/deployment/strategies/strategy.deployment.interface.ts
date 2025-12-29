@@ -1,8 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
-import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../deployment.dto";
+import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO, StreamDeploymentDto } from "../deployment.dto";
 
 export interface DeploymentServiceStrategy {
   deploy(data: DeployDto): Promise<unknown>;
+  streamDeployment(data: StreamDeploymentDto): Promise<unknown>;
   createProject(data: CreateProjectDto): Promise<unknown>;
   getTeams(data: GetTeamsDto): Promise<unknown>;
   getProjects(data: GetProjectsDto): Promise<unknown>;
@@ -11,6 +12,7 @@ export interface DeploymentServiceStrategy {
 
 export interface DeploymentControllerStrategy {
   deploy: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  streamDeployment: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   createProject: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   getTeams: (req: Request, res: Response, next: NextFunction) => Promise<void>;
   getProjects: (req: Request, res: Response, next: NextFunction) => Promise<void>;

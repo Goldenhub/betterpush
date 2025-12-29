@@ -1,14 +1,13 @@
-import type { CreateDeploymentResponseBody } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectResponseBody } from "@vercel/sdk/models/createprojectop.js";
 import { VercelDeploymentAdapter } from "../../adapters/vercel.deployment.adapter";
-import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
-import type { ITokenProvider } from "../../deployment.interface";
+import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO, StreamDeploymentDto } from "../../deployment.dto";
+import type { IDeploymentResponse, ITokenProvider } from "../../deployment.interface";
 import type { DeploymentServiceStrategy } from "../strategy.deployment.interface";
 
 export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   constructor(private tokenProvider: ITokenProvider) {}
 
-  async deploy(data: DeployDto): Promise<CreateDeploymentResponseBody> {
+  async deploy(data: DeployDto): Promise<IDeploymentResponse> {
     const token = await this.tokenProvider.getToken({
       provider: data.provider,
       user_id: data.id,
@@ -42,6 +41,15 @@ export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
     });
     const adapter = new VercelDeploymentAdapter(token);
     return adapter.getProjects(data.teamId);
+  }
+
+  async streamDeployment(data: StreamDeploymentDto) {
+    const token = await this.tokenProvider.getToken({
+      provider: data.provider,
+      user_id: data.user_id,
+    });
+    const adapter = new VercelDeploymentAdapter(token);
+    return adapter.streamDeployment(data.deployment_id);
   }
 
   async webhook(data: ProviderWebhookDTO) {

@@ -35,6 +35,18 @@ export class DeployDto {
   id!: string;
 }
 
+export class StreamDeploymentDto {
+  @IsString()
+  provider!: string;
+
+  @IsString()
+  deployment_id!: string;
+
+  // user id
+  @IsUUID()
+  user_id!: string;
+}
+
 export class CreateProjectDto {
   @IsString()
   teamId!: string;
