@@ -41,10 +41,6 @@ export class StreamDeploymentDto {
 
   @IsString()
   deployment_id!: string;
-
-  // user id
-  @IsUUID()
-  id!: string;
 }
 
 export class CreateProjectDto {

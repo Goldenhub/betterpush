@@ -3,6 +3,7 @@ import { VercelDeploymentAdapter } from "../../adapters/vercel.deployment.adapte
 import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO, StreamDeploymentDto } from "../../deployment.dto";
 import type { IDeploymentResponse, ITokenProvider } from "../../deployment.interface";
 import type { DeploymentServiceStrategy } from "../strategy.deployment.interface";
+import prisma from "../../../prisma/client";
 
 export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   constructor(private tokenProvider: ITokenProvider) {}
@@ -44,10 +45,17 @@ export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   }
 
   async streamDeployment(data: StreamDeploymentDto) {
+    const deploymentDetails = await prisma.deployment.findFirst({
+      where: {
+        deployment_id: data.deployment_id,
+      },
+    });
+
     const token = await this.tokenProvider.getToken({
       provider: data.provider,
-      user_id: data.id,
+      user_id: deploymentDetails?.user_id as string,
     });
+
     const adapter = new VercelDeploymentAdapter(token);
     return adapter.streamDeployment(data.deployment_id);
   }
