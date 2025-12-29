@@ -18,9 +18,9 @@ class DeploymentController {
   });
 
   streamDeployment = handleTryCatch(async (req: Request, res: Response, next: NextFunction) => {
-    const strategy = this.strategies[req.body.provider as string];
+    const strategy = this.strategies[req.params.provider as string];
     if (!strategy) {
-      throw new CustomError(`No strategy found for provider: ${req.body.provider}`, 400);
+      throw new CustomError(`No strategy found for provider: ${req.params.provider}`, 400);
     }
     return strategy.streamDeployment(req, res, next);
   });
