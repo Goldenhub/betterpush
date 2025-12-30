@@ -1,9 +1,11 @@
 import crypto from "node:crypto";
+import readline from "node:readline";
+import { Readable } from "node:stream";
 import type { NextFunction, Request, Response } from "express";
 import config from "../../../config";
 import { CustomError } from "../../../utils/customError";
 import { responseHandler } from "../../../utils/responseHandler";
-import type { StreamDeploymentDto, CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO } from "../../deployment.dto";
+import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO, StreamDeploymentDto } from "../../deployment.dto";
 import { DeploymentService } from "../../deployment.service";
 import type { DeploymentControllerStrategy } from "../strategy.deployment.interface";
 
@@ -56,11 +58,21 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
       return;
     }
 
-    // Pipe raw chunks → browser SSE
-    for await (const chunk of response as Record<string, unknown>[]) {
+    const stream = response as Readable;
+
+    const rl = readline.createInterface({
+      input: stream, // this is a Readable stream
+      crlfDelay: Infinity,
+    });
+
+    // Pipe raw chunks to browser SSE
+    for await (const line of rl) {
       if (res.writableEnded) break;
-      console.log("chunk:", chunk);
-      res.write(chunk);
+      if (!line.trim()) continue;
+      const event = JSON.parse(line);
+
+      res.write(`event: ${event.type || "message"}\n`);
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
     }
   }
 

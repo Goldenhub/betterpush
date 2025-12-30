@@ -17,7 +17,7 @@ export class DeploymentService {
     return strategy?.deploy(data);
   }
 
-  async streamDeployment(data: StreamDeploymentDto): Promise<unknown> {
+  async streamDeployment(data: StreamDeploymentDto) {
     const strategy = this.strategies[data.provider];
     if (!strategy) {
       throw new Error(`No strategy found for provider: ${data.provider}`);
