@@ -1,9 +1,9 @@
 import { Vercel } from "@vercel/sdk";
 import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
-import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
-import prisma from "../../prisma/client";
 import axios from "axios";
+import prisma from "../../prisma/client";
+import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
 // import axios from "axios";
 
 export class VercelDeploymentAdapter {
