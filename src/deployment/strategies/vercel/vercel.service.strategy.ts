@@ -1,9 +1,9 @@
 import type { CreateProjectResponseBody } from "@vercel/sdk/models/createprojectop.js";
+import prisma from "../../../prisma/client";
 import { VercelDeploymentAdapter } from "../../adapters/vercel.deployment.adapter";
 import type { CreateProjectDto, DeployDto, GetProjectsDto, GetTeamsDto, ProviderWebhookDTO, StreamDeploymentDto } from "../../deployment.dto";
 import type { IDeploymentResponse, ITokenProvider } from "../../deployment.interface";
 import type { DeploymentServiceStrategy } from "../strategy.deployment.interface";
-import prisma from "../../../prisma/client";
 
 export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
   constructor(private tokenProvider: ITokenProvider) {}
