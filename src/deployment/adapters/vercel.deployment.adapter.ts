@@ -27,13 +27,14 @@ export class VercelDeploymentAdapter {
         deployment_id: deployment.id,
         user_id: data.id,
         provider: data.provider,
+        build_id: deployment.lambdas?.[0]?.id as string,
       },
     });
 
     return response;
   }
 
-  async streamDeployment(id: string) {
+  async streamDeployment(id: string, build_id: string) {
     const result = await this.client.deployments.getDeploymentEvents({
       idOrUrl: id,
       direction: "backward",
@@ -41,6 +42,7 @@ export class VercelDeploymentAdapter {
       delimiter: 1,
       builds: 1,
       limit: -1,
+      name: build_id,
     });
 
     return result;

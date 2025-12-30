@@ -14,6 +14,8 @@
     "db:generate": "dotenv -e .env.local -- npx prisma generate",
     "db:generate:prod": "dotenv -e .env -- npx prisma generate",
     "db:pull": "dotenv -e .env.local -- npx prisma db pull",
+    "db:rollback": "dotenv -e .env.local -- npx prisma migrate resolve --rolled-back",
+    "db:resolve": "dotenv -e .env.local -- npx prisma migrate resolve --applied",
     "lint": "npx @biomejs/biome lint './src/**/*.{controller,decorator,dtos,services,}.{ts,js}' './public', './src/**/**/*.{ts,js}'",
     "format": "prettier --write 'src/**/*.{ts,js,json}' 'public/**/*.{ts,js,json}' '*.{ts,js}'",
     "docker:start": "docker compose up -d",
