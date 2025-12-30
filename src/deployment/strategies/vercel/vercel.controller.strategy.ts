@@ -41,6 +41,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
     req.on("close", () => {
       res.end();
+      return;
     });
 
     const response = await this.deploymentService.streamDeployment({ provider, deployment_id });
@@ -55,6 +56,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     // Pipe raw chunks → browser SSE
     for await (const chunk of response as Record<string, unknown>[]) {
       if (res.writableEnded) break;
+      console.log("chunk:", chunk);
       res.write(chunk);
     }
   }
