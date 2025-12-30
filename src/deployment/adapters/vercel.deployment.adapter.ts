@@ -49,6 +49,7 @@ export class VercelDeploymentAdapter {
         limit: -1,
         name: build_id,
       },
+      responseType: "stream",
     });
     // const result = await this.client.deployments.getDeploymentEvents({
     //   idOrUrl: id,
