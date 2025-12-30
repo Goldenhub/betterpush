@@ -3,12 +3,14 @@ import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploy
 import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
 import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
 import prisma from "../../prisma/client";
+import axios from "axios";
 // import axios from "axios";
 
 export class VercelDeploymentAdapter {
   private client: Vercel;
-
+  private token: string;
   constructor(accessToken?: string) {
+    this.token = accessToken as string;
     this.client = new Vercel({
       bearerToken: accessToken,
     });
@@ -35,17 +37,30 @@ export class VercelDeploymentAdapter {
   }
 
   async streamDeployment(id: string, build_id: string) {
-    const result = await this.client.deployments.getDeploymentEvents({
-      idOrUrl: id,
-      direction: "backward",
-      follow: 1,
-      delimiter: 1,
-      builds: 1,
-      limit: -1,
-      name: build_id,
+    const result = await axios.get(`https://api.vercel.com/v3/deployments/${id}/events`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+      params: {
+        direction: "backward",
+        follow: 1,
+        delimiter: 1,
+        builds: 1,
+        limit: -1,
+        name: build_id,
+      },
     });
+    // const result = await this.client.deployments.getDeploymentEvents({
+    //   idOrUrl: id,
+    //   direction: "backward",
+    //   follow: 1,
+    //   delimiter: 1,
+    //   builds: 1,
+    //   limit: -1,
+    //   name: build_id,
+    // });
 
-    return result;
+    return result.data;
   }
 
   async getDeploymentDetailsFromDB(deployment_id: string) {
