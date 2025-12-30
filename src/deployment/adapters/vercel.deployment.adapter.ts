@@ -86,7 +86,6 @@ export class VercelDeploymentAdapter {
   async webhook({ payload, type }: Pick<ProviderWebhookDTO, "payload" | "type">) {
     switch (type) {
       case "deployment.succeeded":
-        console.log("deployment successful");
         console.log({
           message: "Deployment successful",
           type,
