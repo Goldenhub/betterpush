@@ -33,7 +33,7 @@ export class VercelDeploymentAdapter {
   async streamDeployment(id: string) {
     const result = await this.client.deployments.getDeploymentEvents({
       idOrUrl: id,
-      direction: "forward",
+      direction: "backward",
       follow: 1,
     });
 
