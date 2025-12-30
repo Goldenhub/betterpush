@@ -3,6 +3,7 @@ import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploy
 import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
 import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
 import prisma from "../../prisma/client";
+// import axios from "axios";
 
 export class VercelDeploymentAdapter {
   private client: Vercel;
@@ -35,7 +36,18 @@ export class VercelDeploymentAdapter {
       idOrUrl: id,
       direction: "backward",
       follow: 1,
+      delimiter: 1,
+      builds: 1,
+      limit: -1,
     });
+
+    // const result = await axios.get(`https://api.vercel.com/v3/deployments/${id}/events`, {
+    //   headers: {
+    //     Authorization: `Bearer ${this.token}`
+    //   },
+    //   responseType: "stream",
+    //   signal:
+    // })
 
     return result;
   }
@@ -75,6 +87,11 @@ export class VercelDeploymentAdapter {
     switch (type) {
       case "deployment.succeeded":
         console.log("deployment successful");
+        console.log({
+          message: "Deployment successful",
+          type,
+          payload,
+        });
         break;
       case "project.created":
         console.log("project created");
