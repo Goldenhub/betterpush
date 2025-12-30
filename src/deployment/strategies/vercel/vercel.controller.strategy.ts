@@ -39,7 +39,10 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
     res.setHeader("Connection", "keep-alive");
     res.flushHeaders();
 
+    const controller = new AbortController();
+
     req.on("close", () => {
+      controller.abort();
       res.end();
       return;
     });
