@@ -109,6 +109,7 @@ model Deployment {
   id              String   @id @default(uuid())
   user_id         String    @db.Uuid
   deployment_id   String
+  build_id        String
   provider        String
   status          DeploymentStatus  @default(DEPLOYING)
   url             String?

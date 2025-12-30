@@ -57,7 +57,7 @@ export class VercelDeploymentStrategy implements DeploymentServiceStrategy {
     });
 
     const adapter = new VercelDeploymentAdapter(token);
-    return adapter.streamDeployment(data.deployment_id);
+    return adapter.streamDeployment(data.deployment_id, deploymentDetails?.build_id as string);
   }
 
   async webhook(data: ProviderWebhookDTO) {
