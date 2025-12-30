@@ -20,6 +20,8 @@ export class VercelDeploymentAdapter {
       requestBody: this.deployPayload(data),
     });
 
+    console.log("deployment:", deployment);
+
     const response = await prisma.deployment.create({
       data: {
         deployment_id: deployment.id,
@@ -40,14 +42,6 @@ export class VercelDeploymentAdapter {
       builds: 1,
       limit: -1,
     });
-
-    // const result = await axios.get(`https://api.vercel.com/v3/deployments/${id}/events`, {
-    //   headers: {
-    //     Authorization: `Bearer ${this.token}`
-    //   },
-    //   responseType: "stream",
-    //   signal:
-    // })
 
     return result;
   }
