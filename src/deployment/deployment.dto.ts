@@ -1,6 +1,6 @@
 import type { Framework } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectFramework, CreateProjectProjectsType } from "@vercel/sdk/models/createprojectop.js";
-import { IsObject, IsString, IsUUID } from "class-validator";
+import { IsObject, IsString, IsUrl, IsUUID } from "class-validator";
 
 export class DeployDto {
   @IsString()
@@ -29,6 +29,9 @@ export class DeployDto {
 
   @IsString()
   framework!: Framework;
+
+  @IsUrl()
+  alias?: string;
 
   // user id
   @IsUUID()

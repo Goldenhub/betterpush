@@ -30,6 +30,7 @@ export class VercelDeploymentAdapter {
         user_id: data.id,
         provider: data.provider,
         build_id: deployment.lambdas?.[0]?.id as string,
+        url: data?.alias,
       },
     });
 
@@ -97,13 +98,27 @@ export class VercelDeploymentAdapter {
 
   async webhook({ payload, type }: Pick<ProviderWebhookDTO, "payload" | "type">) {
     switch (type) {
-      case "deployment.succeeded":
-        console.log({
-          message: "Deployment successful",
-          type,
-          payload,
+      case "deployment.succeeded": {
+        const updatedDeployment = await prisma.deployment.update({
+          where: {
+            id: (payload.deployment as Record<string, unknown>).id as string,
+          },
+          data: {
+            status: "DEPLOYED",
+          },
+        });
+        if (!updatedDeployment.url) {
+          break;
+        }
+        await this.client.aliases.assignAlias({
+          id: (payload.deployment as Record<string, unknown>).id as string,
+          requestBody: {
+            alias: updatedDeployment.url as string,
+            redirect: null,
+          },
         });
         break;
+      }
       case "project.created":
         console.log("project created");
         break;
