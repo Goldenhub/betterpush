@@ -99,12 +99,12 @@ export const paginate = <T>(data: T[], count: number, page?: string, limit?: str
 
 const algorithm = "aes-256-gcm";
 const { ENCRYPTION_KEY } = config as { ENCRYPTION_KEY: string };
-const iv = crypto.randomBytes(16);
 const secret_key = Buffer.from(ENCRYPTION_KEY, "hex");
 
 export function encrypt(text: string) {
+  const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(algorithm, secret_key, iv);
-  const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
+  const encrypted = Buffer.concat([cipher.update(text, "utf-8"), cipher.final()]);
   const tag = cipher.getAuthTag();
   return `${iv.toString("hex")}:${tag.toString("hex")}:${encrypted.toString("hex")}`;
 }
@@ -119,7 +119,7 @@ export function decrypt(data: string) {
   decipher.setAuthTag(tag);
 
   const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
-  return decrypted.toString();
+  return decrypted.toString("utf-8");
 }
 
 export function generateSecureRandomString(length: number) {

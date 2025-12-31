@@ -14,7 +14,7 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
 
   async deploy(req: Request, res: Response, _next: NextFunction) {
     // const payload = this.adapter.deployPayload(req.body as DeployDto);
-    const { name, branch, framework, gitHost, org, project, provider, repo, teamId }: Omit<DeployDto, "id"> = req.body;
+    const { name, branch, framework, gitHost, org, project, provider, repo, teamId, deploymentId, alias }: Omit<DeployDto, "id"> = req.body;
     const { id } = req.user;
 
     const response = await this.deploymentService.deploy({
@@ -28,6 +28,8 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
       repo,
       teamId,
       id,
+      deploymentId,
+      alias,
     });
 
     return responseHandler.success(res, 201, "Deployed", response);
@@ -77,9 +79,9 @@ export class VercelDeploymentControllerStrategy implements DeploymentControllerS
   }
 
   async createProject(req: Request, res: Response, _next: NextFunction) {
-    const { projectName, framework, repo, teamId, type, provider }: Omit<CreateProjectDto, "id"> = req.body;
+    const { projectName, framework, repo, teamId, type, provider, envVars }: Omit<CreateProjectDto, "id"> = req.body;
     const { id } = req.user;
-    const response = await this.deploymentService.createProject({ projectName, framework, repo, teamId, type, provider, id });
+    const response = await this.deploymentService.createProject({ projectName, framework, repo, teamId, type, provider, id, envVars });
 
     return responseHandler.success(res, 201, "Project created", response);
   }

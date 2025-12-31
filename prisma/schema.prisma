@@ -129,6 +129,7 @@ model EnvVar {
   environment        String
   key                String
   encrypted_value    String
+  type               String
 
   @@map("env_vars")
 }

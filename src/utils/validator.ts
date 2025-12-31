@@ -23,12 +23,18 @@ export const validator = async (req: Request, res: Response, next: NextFunction,
   if (Array.isArray(dto)) {
     for (const o of dto) {
       const objectToValidate = plainToClass(o, reqObj);
-      const error = await validate(objectToValidate);
+      const error = await validate(objectToValidate, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
       errors.push(...error);
     }
   } else {
     const objectToValidate = plainToClass(dto, reqObj);
-    const error: ValidationError[] = await validate(objectToValidate);
+    const error: ValidationError[] = await validate(objectToValidate, {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
     errors.push(...error);
   }
   if (errors.length) {

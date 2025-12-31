@@ -1,6 +1,7 @@
 import type { Framework } from "@vercel/sdk/models/createdeploymentop.js";
 import type { CreateProjectFramework, CreateProjectProjectsType } from "@vercel/sdk/models/createprojectop.js";
-import { IsObject, IsString, IsUrl, IsUUID } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsObject, IsString, IsUrl, IsUUID, ValidateNested } from "class-validator";
 
 export class DeployDto {
   @IsString()
@@ -33,6 +34,9 @@ export class DeployDto {
   @IsUrl()
   alias?: string;
 
+  @IsString()
+  deploymentId?: string;
+
   // user id
   @IsUUID()
   id!: string;
@@ -64,9 +68,35 @@ export class CreateProjectDto {
 
   @IsString()
   provider!: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => EnvVarDto)
+  envVars?: EnvVarDto[];
+
   // user id
   @IsUUID()
   id!: string;
+}
+
+export class EnvVarDto {
+  @IsString()
+  id!: string;
+
+  @IsString()
+  project_id!: string;
+
+  @IsString()
+  environment?: string;
+
+  @IsString()
+  key!: string;
+
+  @IsString()
+  value!: string;
+
+  @IsString()
+  type!: string;
 }
 
 export class GetTeamsDto {
