@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import readline from "node:readline";
-import { Readable } from "node:stream";
+import type { Readable } from "node:stream";
 import type { NextFunction, Request, Response } from "express";
 import config from "../../../config";
 import { CustomError } from "../../../utils/customError";
