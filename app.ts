@@ -4,7 +4,6 @@ import type { Request, Response } from "express";
 import express from "express";
 import { errorHandler, unknownEndpoints } from "./src/middlewares";
 import router from "./src/routes";
-import "reflect-metadata";
 
 const app = express();
 

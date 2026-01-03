@@ -1,5 +1,7 @@
 /// <reference path="../src/types/express.d.ts" />
 
+import "reflect-metadata";
+
 import app from "../app";
 import config from "../src/config";
 import { runQueue } from "../src/config/queue";
