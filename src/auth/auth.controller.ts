@@ -149,7 +149,7 @@ export const logout = handleTryCatch(async (req: Request, res: Response) => {
   const response = await authService.logout({ user, refreshToken, deviceId, userAgent });
 
   if (!response) {
-    return responseHandler.error(res, new CustomError("Error encountered", 401));
+    return responseHandler.error(res, new CustomError("Error encountered", 400));
   }
 
   res.clearCookie("refresh-token", {
