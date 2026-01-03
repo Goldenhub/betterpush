@@ -254,8 +254,8 @@ export const authService = {
     return tokenService.deleteRefreshToken(refreshToken, user.id, deviceId, userAgent);
   },
 
-  async githubAuth() {
-    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=${APP_URL}/auth/github/callback`;
+  async githubAuth(deviceId: string) {
+    const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=${APP_URL}/auth/github/callback?device_id=${deviceId}`;
     return redirectUrl;
   },
   async githubRepo() {
@@ -263,7 +263,7 @@ export const authService = {
     return redirectUrl;
   },
 
-  async githubOAuthLoginCallback({ code, user_agent, ip }: { code: string; user_agent: string; ip: string }) {
+  async githubOAuthLoginCallback({ device_id, code, user_agent, ip }: { device_id: string; code: string; user_agent: string; ip: string }) {
     // get access token
     const tokenRes = await axios.post(
       `https://github.com/login/oauth/access_token`,
@@ -290,7 +290,7 @@ export const authService = {
 
     const { id, login, name, avatar_url, email }: Record<string, string> = profile.data;
 
-    const device_id = String(id);
+    // const device_id = String(id);
 
     // Some users hide their email — fetch separately if needed
     let userEmail = email;

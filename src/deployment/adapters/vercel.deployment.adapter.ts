@@ -1,9 +1,10 @@
 import { Vercel } from "@vercel/sdk";
 import type { GitSource, ProjectSettings } from "@vercel/sdk/models/createdeploymentop.js";
-import type { CreateProjectRequestBody, GitRepository } from "@vercel/sdk/models/createprojectop.js";
+import type { CreateProjectRequestBody, EnvironmentVariables, GitRepository } from "@vercel/sdk/models/createprojectop.js";
 import axios from "axios";
 import prisma from "../../prisma/client";
-import type { CreateProjectDto, DeployDto, ProviderWebhookDTO } from "../deployment.dto";
+import type { CreateProjectDto, DeployDto, EnvVarDto, ProviderWebhookDTO } from "../deployment.dto";
+import { encrypt } from "../../utils/helpers";
 // import axios from "axios";
 
 export class VercelDeploymentAdapter {
@@ -30,6 +31,7 @@ export class VercelDeploymentAdapter {
         user_id: data.id,
         provider: data.provider,
         build_id: deployment.lambdas?.[0]?.id as string,
+        url: data?.alias,
       },
     });
 
@@ -78,6 +80,19 @@ export class VercelDeploymentAdapter {
       requestBody: this.projectPayload(data),
     });
 
+    if (data.envVars?.length) {
+      const envVars = data.envVars.map((envVar: EnvVarDto) => ({
+        project_id: envVar.project_id,
+        type: envVar.type,
+        key: envVar.key,
+        encrypted_value: encrypt(envVar.value),
+        environment: envVar.environment ?? "production",
+      }));
+      await prisma.envVar.createMany({
+        data: [...envVars],
+      });
+    }
+
     return response;
   }
 
@@ -97,13 +112,27 @@ export class VercelDeploymentAdapter {
 
   async webhook({ payload, type }: Pick<ProviderWebhookDTO, "payload" | "type">) {
     switch (type) {
-      case "deployment.succeeded":
-        console.log({
-          message: "Deployment successful",
-          type,
-          payload,
+      case "deployment.succeeded": {
+        const updatedDeployment = await prisma.deployment.update({
+          where: {
+            id: (payload.deployment as Record<string, unknown>).id as string,
+          },
+          data: {
+            status: "DEPLOYED",
+          },
+        });
+        if (!updatedDeployment.url) {
+          break;
+        }
+        await this.client.aliases.assignAlias({
+          id: (payload.deployment as Record<string, unknown>).id as string,
+          requestBody: {
+            alias: updatedDeployment.url as string,
+            redirect: null,
+          },
         });
         break;
+      }
       case "project.created":
         console.log("project created");
         break;
@@ -133,6 +162,7 @@ export class VercelDeploymentAdapter {
       } as ProjectSettings,
       provider: data.provider,
       teamId: data.teamId,
+      deploymentId: data.deploymentId,
     };
   }
   projectPayload(data: CreateProjectDto): CreateProjectRequestBody {
@@ -143,6 +173,12 @@ export class VercelDeploymentAdapter {
         type: data.type,
       } as GitRepository,
       framework: data.framework,
+      environmentVariables: data.envVars?.map((envVar) => ({
+        key: envVar.key,
+        target: (envVar.environment as EnvironmentVariables["target"]) ?? "production", // "production" | "preview" | "development" or Array<"production" | "preview" | "development">
+        type: envVar?.type as EnvironmentVariables["type"], //"system" | "secret" | "encrypted" | "plain" | "sensitive"
+        value: envVar.value,
+      })),
     };
   }
 }

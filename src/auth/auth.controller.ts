@@ -169,8 +169,9 @@ export const logout = handleTryCatch(async (req: Request, res: Response) => {
   return responseHandler.success(res, 200, "Logged out successfully");
 });
 
-export const githubAuth = handleTryCatch(async (_req: Request, res: Response) => {
-  const response = await authService.githubAuth();
+export const githubAuth = handleTryCatch(async (req: Request, res: Response) => {
+  const { device_id } = req.query as { device_id: string };
+  const response = await authService.githubAuth(device_id);
 
   return res.redirect(response);
 });
@@ -184,8 +185,8 @@ export const githubRepo = handleTryCatch(async (_req: Request, res: Response) =>
 export const githubOAuthLoginCallback = handleTryCatch(async (req: Request, res: Response) => {
   const user_agent = req.headers["user-agent"] ?? "unknown";
   const ip = req.ip ?? "0.0.0.0";
-  const { code } = req.query as { code: string };
-  const { responseUrl, accessToken, refreshToken } = await authService.githubOAuthLoginCallback({ code, user_agent, ip });
+  const { code, device_id } = req.query as { code: string; device_id: string };
+  const { responseUrl, accessToken, refreshToken } = await authService.githubOAuthLoginCallback({ device_id, code, user_agent, ip });
 
   // send the refresh token via http-only cookie
   res.cookie("refresh-token", refreshToken, {

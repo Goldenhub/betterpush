@@ -34,6 +34,7 @@ export class LoginDto {
   @IsValidPassword()
   password!: string;
 
+  @IsNotEmpty()
   @IsString()
   device_id!: string;
 }

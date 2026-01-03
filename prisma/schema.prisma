@@ -122,8 +122,21 @@ model Deployment {
   @@map("deployments")
 }
 
+// not migrated
+model EnvVar {
+  id                 String   @id @default(uuid())
+  project_id         String
+  environment        String
+  key                String
+  encrypted_value    String
+  type               String
+
+  @@map("env_vars")
+}
+
 enum DeploymentStatus {
   DEPLOYING
   DEPLOYED
   CANCELED
 }
+
