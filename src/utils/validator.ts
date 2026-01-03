@@ -33,7 +33,6 @@ export const validator = async (req: Request, res: Response, next: NextFunction,
     const objectToValidate = plainToClass(dto, reqObj);
     const error: ValidationError[] = await validate(objectToValidate, {
       whitelist: true,
-      forbidNonWhitelisted: true,
     });
     errors.push(...error);
   }
