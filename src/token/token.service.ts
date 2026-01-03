@@ -125,7 +125,7 @@ export const tokenService = {
       throw new CustomError("Invalid refresh token", 401);
     }
 
-    await prisma.refreshToken.delete({
+    const response = await prisma.refreshToken.delete({
       where: {
         id: record.id,
         user_id_device_id: {
@@ -135,6 +135,10 @@ export const tokenService = {
         user_agent: userAgent,
       },
     });
+
+    if (!response) {
+      return false;
+    }
 
     return true;
   },
